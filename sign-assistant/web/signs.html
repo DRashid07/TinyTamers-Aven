@@ -3,46 +3,124 @@
 <html lang="az">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Aven — Mətndən işarəyə</title>
+  <meta name="theme-color" content="#F6F5FA">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%235B2BA6'/%3E%3Cg fill='%23fff' transform='translate(14 14) scale(.75)'%3E%3Cpath d='M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z'/%3E%3Cpath transform='rotate(180 24 24)' d='M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/onest-az.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/archivo-az.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    // Theme before the first paint (no flash): the saved choice, otherwise the system setting. ui.js does the rest.
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem("aven-theme"); } catch (e) { /* storage blocked */ }
+      if (theme !== "dark" && theme !== "light") theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="banner" role="note">Köməkçi prototip. Təsdiqlənmiş tərcümə deyil.
-    Tibbi və hüquqi qərarlar üçün surdotərcüməçiyə müraciət edin.</div>
-  <main class="signs">
-    <nav class="topnav">
-      <span class="brand"><strong>Aven</strong> <span class="tagline" lang="en">A way to understand</span></span>
-      <a href="/">← İşarədən mətnə</a>
-    </nav>
-    <h1>Mətndən işarəyə</h1>
-    <label for="text">Mətn (ən çox 300 simvol)</label>
-    <textarea id="text" rows="3" maxlength="300" placeholder="məs. Sabah Bakıya getmək istəyirəm"></textarea>
-    <div class="controls">
-      <button id="mic" type="button" hidden>🎤 Danış</button>
-      <button id="show" type="button">Göstər</button>
-      <button id="replay" type="button" disabled>Təkrar</button>
-      <label>Sürət
-        <select id="speed">
-          <option value="0.75">0.75x</option>
-          <option value="1" selected>1x</option>
-        </select>
-      </label>
-      <span id="status" class="status" aria-live="polite"></span>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-logo" viewBox="0 0 48 48"><path d="M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z"/><path transform="rotate(180 24 24)" d="M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8h.01"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 15V5.5a1.5 1.5 0 0 1 3 0V12M11 11.5V4a1.5 1.5 0 0 1 3 0v7.5M14 11.5V6a1.5 1.5 0 0 1 3 0v6.5M17 12.5V9a1.5 1.5 0 0 1 3 0v5.5a7.5 7.5 0 0 1-7.5 7.5H12a6.5 6.5 0 0 1-5-2.4l-3.2-4a1.7 1.7 0 0 1 2.6-2.2L8 15"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4V16a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 5.5 4zM8 8.5h8M8 12h5"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.3v13.4L18.6 12z" fill="currentColor"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.3-5.4L4.5 8.8M4.5 4.5v4.3h4.3"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.3l5-2.8v9l-5-2.8"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  </svg>
+
+  <a class="skip" href="#main">Məzmuna keç</a>
+
+  <div class="topbar" role="note">
+    <div class="topbar-inner">
+      <svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
+      <p><b>Köməkçi prototip.</b> Təsdiqlənmiş tərcümə deyil.
+        Tibbi və hüquqi qərarlar üçün surdotərcüməçiyə müraciət edin.</p>
     </div>
+  </div>
 
-    <div class="player"><video id="video" muted playsinline preload="auto"></video></div>
-    <p id="subtitle" class="subtitle" aria-live="polite"></p>
-    <ol id="chips" class="chips" aria-label="İşarələrin ardıcıllığı"></ol>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="./">
+        <span class="logo-mark"><svg aria-hidden="true"><use href="#i-logo"/></svg></span>
+        <span class="logo-text"><b>Aven</b><small lang="en">A way to understand</small></span>
+      </a>
+      <nav class="modes" aria-label="İstiqamət">
+        <a href="./"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg>İşarədən mətnə</a>
+        <a href="signs.html" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg>Mətndən işarəyə</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Tünd tema" title="Tünd tema">
+        <svg class="ic i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="ic i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+    </div>
+  </header>
 
-    <p id="source" class="note"></p>
-    <p class="note">İşarələr mətndəki söz sırası ilə göstərilir; AzSL qrammatikası tətbiq olunmur.
-      Qırmızı: lüğətdə işarəsi olmayan söz.</p>
-    <p id="mic-note" class="note" hidden>Mikrofon: Chrome nitqi tanımaq üçün səsi Google serverinə göndərir.</p>
-    <p class="note">Videolar: AzSLD (Alishzade &amp; Hasanov, 2025), CC BY 4.0,
-      <a href="https://doi.org/10.5281/zenodo.14222948">DOI 10.5281/zenodo.14222948</a>.
-      Kliplər komanda tərəfindən kəsilib və yenidən kodlanıb.</p>
+  <main id="main" class="page page-b" tabindex="-1">
+    <h1 class="sr-only">Mətndən işarəyə</h1>
+
+    <section class="card input-card" aria-labelledby="text-title">
+      <div class="card-h">
+        <h2 id="text-title"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg><label for="text">Mətn</label></h2>
+        <span class="hint">(ən çox 300 simvol)</span>
+      </div>
+      <div class="card-b">
+        <textarea id="text" rows="3" maxlength="300" placeholder="məs. Sabah Bakıya getmək istəyirəm"></textarea>
+        <div class="input-actions">
+          <button id="mic" type="button" class="btn btn-ghost btn-lg btn-mic" hidden>
+            <svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg>Danış</button>
+          <button id="show" type="button" class="btn btn-primary btn-lg" data-busy>
+            <svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>Göstər</button>
+        </div>
+        <p id="status" class="status" aria-live="polite"></p>
+        <p id="mic-note" class="aside-note" hidden><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
+          <span>Mikrofon: Chrome nitqi tanımaq üçün səsi Google serverinə göndərir.</span></p>
+      </div>
+    </section>
+
+    <section class="card player-card" aria-labelledby="player-title">
+      <div class="card-h">
+        <h2 id="player-title"><svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>İşarələr</h2>
+        <div class="player-tools">
+          <label class="speed">Sürət
+            <select id="speed">
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+            </select>
+          </label>
+          <button id="replay" type="button" class="btn btn-ghost btn-sm" disabled>
+            <svg class="ic" aria-hidden="true"><use href="#i-replay"/></svg>Təkrar</button>
+        </div>
+      </div>
+      <div class="card-b">
+        <div class="player"><video id="video" muted playsinline preload="auto"></video></div>
+        <p id="subtitle" class="subtitle" aria-live="polite"></p>
+        <ol id="chips" class="chips" aria-label="İşarələrin ardıcıllığı"></ol>
+        <div class="player-notes">
+          <p id="source" class="note"></p>
+          <p class="note">İşarələr mətndəki söz sırası ilə göstərilir; AzSL qrammatikası tətbiq olunmur.
+            Qırmızı: lüğətdə işarəsi olmayan söz.</p>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="credit">Videolar: AzSLD (Alishzade &amp; Hasanov, 2025), CC BY 4.0,
+        <a href="https://doi.org/10.5281/zenodo.14222948">DOI 10.5281/zenodo.14222948</a>.
+        Kliplər komanda tərəfindən kəsilib və yenidən kodlanıb.</p>
+    </div>
+  </footer>
+
+  <script src="ui.js" defer></script>
   <script type="module" src="signs.js"></script>
 </body>
 </html>
