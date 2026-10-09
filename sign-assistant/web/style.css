@@ -109,6 +109,43 @@
   color-scheme: dark;
 }
 
+/* High contrast (ui.js, "Aa" panel): darker text and lines, stronger status inks, 2 px borders below */
+:root[data-contrast="high"] {
+  --kd-ink: #120E1A;
+  --kd-body: #211B2E;
+  --kd-muted: #362F44;
+  --kd-nav: #211B2E;
+  --kd-line: #6B6380;
+  --kd-line-soft: #4F4860;
+  --kd-primary: #4A2188;
+  --kd-primary-strong: #3A1A6C;
+  --kd-primary-ink: #3D1C70;
+  --av-bg: #FFFFFF;
+  --av-surface-soft: #F1EEF7;
+  --av-ok-ink: #03543B;
+  --av-warn-ink: #6B3A05;
+  --av-bad-ink: #8F1C13;
+}
+
+:root[data-theme="dark"][data-contrast="high"] {
+  --kd-ink: #FFFFFF;
+  --kd-body: #F1ECFA;
+  --kd-muted: #DCD4EA;
+  --kd-nav: #FFFFFF;
+  --kd-line: rgb(255 255 255 / 45%);
+  --kd-line-soft: rgb(255 255 255 / 62%);
+  --kd-primary: #6A3FC4;
+  --kd-primary-strong: #5B33AE;
+  --kd-primary-ink: #DCCFFF;
+  --av-bg: #08070B;
+  --av-surface: #121019;
+  --av-raised: #1E1A28;
+  --av-surface-soft: #100D16;
+  --av-ok-ink: #A7F3D0;
+  --av-warn-ink: #FDE68A;
+  --av-bad-ink: #FECACA;
+}
+
 /* ==================== 2. FONTS AND BASE ==================== */
 /* Archivo (headings) and Onest (text): the University App's Azerbaijani subsets, where Ə ə and İ ı are the fonts'
    own glyphs. SIL Open Font License 1.1, see fonts/OFL.txt. Other Latin letters fall back to the system font. */
@@ -135,8 +172,13 @@
 /* Author display rules (.btn, .card...) must not undo the hidden attribute that app.js and signs.js toggle */
 [hidden] { display: none !important; }
 
+/* Text size (ui.js, "Aa" panel): every size is in rem, so one factor scales the whole page */
+:root { --text-scale: 1; }
+:root[data-text="1"] { --text-scale: 1.12; }
+:root[data-text="2"] { --text-scale: 1.25; }
+
 html {
-  font-size: 106.25%;
+  font-size: calc(106.25% * var(--text-scale));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -344,28 +386,133 @@ main:focus { outline: none; }
 
 .modes .ic { width: 1.25em; height: 1.25em; }
 
+/* Header tools: language, display settings ("Aa") and theme, round 44 px buttons as in University App */
+.header-tools { display: flex; align-items: center; gap: 8px; flex: none; }
+
+.tool-btn,
 .theme-toggle {
   position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
   height: 44px;
   flex: none;
-  padding: 0;
+  padding: 0 12px;
   border: 1px solid var(--kd-line-soft);
-  border-radius: 50%;
+  border-radius: 999px;
   background: var(--av-raised);
   color: var(--kd-ink);
+  font-weight: 800;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
+  list-style: none;
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--motion-base), border-color var(--motion-base);
 }
 
+.theme-toggle { width: 44px; padding: 0; }
+.tool-btn::-webkit-details-marker { display: none; }
+.tool-btn:hover,
 .theme-toggle:hover { background: var(--kd-tint); border-color: color-mix(in srgb, var(--kd-primary) 45%, var(--kd-line-soft)); }
+.tool-btn .ic,
 .theme-toggle .ic { width: 20px; height: 20px; }
+.tool-btn .aa { font-family: var(--kd-display); font-size: 1.05rem; letter-spacing: 0; }
 .theme-toggle .i-sun,
 :root[data-theme="dark"] .theme-toggle .i-moon { display: none; }
 :root[data-theme="dark"] .theme-toggle .i-sun { display: block; }
+
+/* Display settings panel under the "Aa" button: text size and contrast */
+.prefs { position: relative; }
+.prefs[open] > .tool-btn { background: var(--kd-tint-strong); border-color: color-mix(in srgb, var(--kd-primary) 55%, transparent); color: var(--av-on-tint); }
+
+.prefs-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  display: grid;
+  gap: 12px;
+  width: min(280px, calc(100vw - 32px));
+  padding: 16px;
+  border: 1px solid var(--kd-line);
+  border-radius: var(--radius-lg);
+  background: var(--av-surface);
+  color: var(--kd-ink);
+  box-shadow: var(--av-shadow);
+}
+
+.prefs-title { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--kd-muted); }
+
+.seg {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--kd-line);
+  border-radius: 12px;
+  background: var(--av-surface-soft);
+}
+
+.seg button {
+  flex: 1 1 0;
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--kd-nav);
+  font-family: var(--kd-display);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.seg button:nth-child(1) { font-size: 0.9rem; }
+.seg button:nth-child(2) { font-size: 1.05rem; }
+.seg button:nth-child(3) { font-size: 1.2rem; }
+.seg button[aria-pressed="true"] { background: var(--av-raised); color: var(--kd-primary-ink); box-shadow: var(--av-shadow-soft), 0 0 0 1px var(--kd-line-soft); }
+
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.switch input {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 28px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--kd-line-soft);
+  cursor: pointer;
+  transition: background-color var(--motion-base);
+}
+
+.switch input::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+  transition: transform var(--motion-base) var(--ease-standard);
+}
+
+.switch input:checked { background: var(--kd-primary); }
+.switch input:checked::before { transform: translateX(20px); }
 
 .page {
   flex: 1 0 auto;
@@ -886,13 +1033,18 @@ select {
 .assumptions:empty { display: none; }
 .sentence-card .alert { margin-top: 12px; }
 
+/* Read aloud on its own row, Big screen and Copy side by side under it (as the word buttons above) */
 .speak-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   margin-top: 16px;
 }
+
+.speak-row .btn { padding-inline: 12px; }
+.speak-row .btn-primary,
+.speak-row .note { grid-column: 1 / -1; }
+.speak-row .note:empty { display: none; }
 
 /* Record mode (team only), folded in the footer */
 .record-box {
@@ -933,6 +1085,117 @@ select {
 .record input:invalid { border-color: var(--av-bad); }
 #rec-status { flex-basis: 100%; font-weight: 600; }
 #rec-status:empty { display: none; }
+
+.card-h-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+.btn.is-copied { border-color: var(--av-ok); color: var(--av-ok-ink); }
+
+/* Big screen (ui.js): the composed sentence fills the screen, to turn it towards the other person */
+.bigscreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 40px 24px;
+  border: 0;
+  background: var(--av-surface);
+  color: var(--kd-ink);
+}
+
+.bigscreen[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.bigscreen::backdrop { background: var(--av-surface); }
+
+.bigscreen-text {
+  max-width: 22ch;
+  font-family: var(--kd-display);
+  font-size: clamp(2.4rem, 7.5vw, 7.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.bigscreen-sub { max-width: 60ch; font-size: clamp(1rem, 2vw, 1.5rem); color: var(--kd-muted); }
+.bigscreen-tools { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
+.bigscreen-body { display: grid; justify-items: center; gap: 28px; transition: transform var(--motion-base) var(--ease-standard); }
+.bigscreen.is-flipped .bigscreen-body { transform: rotate(180deg); }
+.bigscreen [data-bigscreen-flip][aria-pressed="true"] { background: var(--kd-tint-strong); color: var(--av-on-tint); }
+
+/* Conversation history of this session (ui.js, sessionStorage) */
+.history-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+
+.history-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 2px 12px;
+  padding: 12px 12px 12px 14px;
+  border: 1px solid var(--kd-line);
+  border-radius: 14px;
+  background: var(--av-surface-soft);
+}
+
+.history-time { padding-top: 0.2em; font-size: 0.8rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kd-muted); }
+.history-text { font-family: var(--kd-display); font-size: 1.05rem; font-weight: 700; line-height: 1.35; overflow-wrap: anywhere; }
+.history-glosses { grid-column: 2; font-size: 0.85rem; color: var(--kd-muted); overflow-wrap: anywhere; }
+.history-list .tool-btn { grid-column: 3; grid-row: 1 / span 2; min-width: 40px; height: 40px; padding: 0; }
+
+/* First visit: three short steps (ui.js) */
+.onboard {
+  width: min(560px, calc(100% - 32px));
+  padding: 0;
+  border: 1px solid var(--kd-line);
+  border-radius: 24px;
+  background: var(--av-surface);
+  color: var(--kd-ink);
+  box-shadow: var(--av-shadow);
+}
+
+.onboard::backdrop { background: rgb(18 16 25 / 55%); }
+
+.onboard-step {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 36px 28px 8px;
+  text-align: center;
+}
+
+.onboard-ic {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 22px;
+  background: var(--kd-tint-strong);
+  color: var(--kd-primary-ink);
+}
+
+.onboard-ic .ic { width: 38px; height: 38px; }
+.onboard-step h2 { font-size: 1.4rem; }
+.onboard-step p { max-width: 40ch; color: var(--kd-body); }
+
+.onboard-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 20px 22px;
+}
+
+.onboard-dots { display: flex; gap: 6px; }
+.onboard-dots span { width: 8px; height: 8px; border-radius: 999px; background: var(--kd-line-soft); transition: width var(--motion-base), background-color var(--motion-base); }
+.onboard-dots span.on { width: 22px; background: var(--kd-primary); }
+.onboard-buttons { display: flex; gap: 8px; margin-left: auto; }
 
 /* ==================== 6. DIRECTION B (signs.html) ==================== */
 .page-b {
@@ -1156,7 +1419,7 @@ select {
   .logo-mark { width: 36px; height: 36px; border-radius: 11px; }
   .logo-mark svg { width: 21px; height: 21px; }
   .logo-text b { font-size: 1.2rem; }
-  .theme-toggle { margin-left: auto; }
+  .header-tools { margin-left: auto; gap: 6px; }
   .modes { order: 3; flex-basis: 100%; margin: 0; }
   .modes a { flex: 1 1 0; min-width: 0; min-height: 46px; padding: 0 8px; font-size: 0.9rem; }
 
@@ -1192,6 +1455,14 @@ select {
   .chip-btn { white-space: nowrap; }
 }
 
+/* Phones: the language button drops its globe so logo and the three header buttons share one row; with larger text
+   two buttons no longer fit side by side, so they stack and labels may wrap instead of pushing the page sideways */
+@media (max-width: 440px) {
+  [data-lang-toggle] .ic { display: none; }
+  :root[data-text] :is(.actions, .speak-row) { grid-template-columns: minmax(0, 1fr); }
+  :root[data-text] .btn { white-space: normal; text-align: center; }
+}
+
 @media (max-width: 360px) {
   .modes .ic { display: none; }
   .actions { grid-template-columns: 1fr; }
@@ -1221,7 +1492,7 @@ select {
    chrome above and below it (300 px), so the pill, the camera and its note fit on one screen also inside a browser
    window with toolbars (about 630 px high); the buttons sit in one row so the composed sentence stays in view. */
 @media (min-width: 960px) {
-  html { font-size: 112.5%; }
+  html { font-size: calc(112.5% * var(--text-scale)); }
 
   .topbar-inner { padding-block: 7px; }
   .page { padding-top: 16px; }
@@ -1280,3 +1551,9 @@ html.theme-fade *::after {
   :root, :root[data-theme] { --kd-muted: var(--kd-body); --kd-line: var(--kd-line-soft); }
   .card, .btn-ghost, .modes, .pill { border-width: 2px; }
 }
+
+:root[data-contrast="high"] :is(.card, .btn-ghost, .modes, .pill, .word-chips li, .chip, .chip-btn, .tool-btn, .theme-toggle,
+  .words, .record-box, .prefs-panel, .history-list li, input, select, textarea) { border-width: 2px; }
+:root[data-contrast="high"] :focus-visible { outline: 3px solid var(--kd-primary-ink); outline-offset: 2px; }
+:root[data-contrast="high"] .note,
+:root[data-contrast="high"] .aside-note { color: var(--kd-body); }

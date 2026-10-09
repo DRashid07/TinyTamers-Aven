@@ -4,21 +4,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Aven — Mətndən işarəyə</title>
+  <title data-i18n="title.b">Aven — Mətndən işarəyə</title>
+  <meta name="description" content="Aven: yazılan və ya deyilən Azərbaycan dili mətnini işarə dili videolarına çevirir.">
   <meta name="theme-color" content="#F6F5FA">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%235B2BA6'/%3E%3Cg fill='%23fff' transform='translate(14 14) scale(.75)'%3E%3Cpath d='M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z'/%3E%3Cpath transform='rotate(180 24 24)' d='M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Aven">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Aven">
+  <meta property="og:title" content="Aven — Mətndən işarəyə">
+  <meta property="og:description" content="Yazılan və ya deyilən mətni Azərbaycan işarə dili videolarına çevirir. Text to Azerbaijani Sign Language videos.">
+  <meta property="og:url" content="https://azsl-assistant-production.up.railway.app/signs.html">
+  <meta property="og:image" content="https://azsl-assistant-production.up.railway.app/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Aven — A way to understand. Azərbaycan işarə dili köməkçisi.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/onest-az.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/archivo-az.woff2" as="font" type="font/woff2" crossorigin>
   <script>
-    // Theme before the first paint (no flash): the saved choice, otherwise the system setting. ui.js does the rest.
+    // Before the first paint (no flash): theme (saved, else the system setting), text size, contrast, language.
     (function () {
-      var theme = null;
-      try { theme = localStorage.getItem("aven-theme"); } catch (e) { /* storage blocked */ }
+      var d = document.documentElement;
+      function saved(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+      var theme = saved("aven-theme");
       if (theme !== "dark" && theme !== "light") theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      document.documentElement.dataset.theme = theme;
+      d.dataset.theme = theme;
+      var text = saved("aven-text");
+      if (text === "1" || text === "2") d.dataset.text = text;
+      if (saved("aven-contrast") === "high") d.dataset.contrast = "high";
+      if (saved("aven-lang") === "en") d.lang = "en";
     })();
   </script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261009b">
 </head>
 <body>
   <svg class="sprite" aria-hidden="true" focusable="false">
@@ -28,6 +50,7 @@
     <symbol id="i-text" viewBox="0 0 24 24"><path d="M5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4V16a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 5.5 4zM8 8.5h8M8 12h5"/></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.3v13.4L18.6 12z" fill="currentColor"/></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
     <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.3-5.4L4.5 8.8M4.5 4.5v4.3h4.3"/></symbol>
@@ -36,12 +59,12 @@
     <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
   </svg>
 
-  <a class="skip" href="#main">Məzmuna keç</a>
+  <a class="skip" href="#main" data-i18n="skip">Məzmuna keç</a>
 
   <div class="topbar" role="note">
     <div class="topbar-inner">
       <svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
-      <p><b>Köməkçi prototip.</b> Təsdiqlənmiş tərcümə deyil.
+      <p data-i18n-html="top.disclaimer"><b>Köməkçi prototip.</b> Təsdiqlənmiş tərcümə deyil.
         Tibbi və hüquqi qərarlar üçün surdotərcüməçiyə müraciət edin.</p>
     </div>
   </div>
@@ -52,47 +75,63 @@
         <span class="logo-mark"><svg aria-hidden="true"><use href="#i-logo"/></svg></span>
         <span class="logo-text"><b>Aven</b><small lang="en">A way to understand</small></span>
       </a>
-      <nav class="modes" aria-label="İstiqamət">
-        <a href="./"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg>İşarədən mətnə</a>
-        <a href="signs.html" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg>Mətndən işarəyə</a>
+      <nav class="modes" aria-label="İstiqamət" data-i18n-attr="aria-label:nav.label">
+        <a href="./"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg><span data-i18n="nav.a">İşarədən mətnə</span></a>
+        <a href="signs.html" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg><span data-i18n="nav.b">Mətndən işarəyə</span></a>
       </nav>
-      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Tünd tema" title="Tünd tema">
-        <svg class="ic i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
-        <svg class="ic i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
-      </button>
+      <div class="header-tools">
+        <button class="tool-btn" type="button" data-lang-toggle aria-label="English" title="English">
+          <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg><span data-lang-label>EN</span></button>
+        <details class="prefs">
+          <summary class="tool-btn" aria-label="Görünüş" title="Görünüş" data-i18n-attr="aria-label:prefs;title:prefs"><span class="aa" aria-hidden="true">Aa</span></summary>
+          <div class="prefs-panel">
+            <p class="prefs-title" data-i18n="prefs.text">Yazı ölçüsü</p>
+            <div class="seg" role="group" aria-label="Yazı ölçüsü" data-i18n-attr="aria-label:prefs.text">
+              <button type="button" data-text-size="0" aria-pressed="true" aria-label="Normal" data-i18n-attr="aria-label:prefs.t0">A</button>
+              <button type="button" data-text-size="1" aria-pressed="false" aria-label="Böyük" data-i18n-attr="aria-label:prefs.t1">A+</button>
+              <button type="button" data-text-size="2" aria-pressed="false" aria-label="Çox böyük" data-i18n-attr="aria-label:prefs.t2">A++</button>
+            </div>
+            <label class="switch"><span data-i18n="prefs.contrast">Yüksək kontrast</span><input type="checkbox" data-contrast-toggle></label>
+          </div>
+        </details>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Tünd tema" title="Tünd tema" data-i18n-attr="aria-label:theme;title:theme">
+          <svg class="ic i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+          <svg class="ic i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <main id="main" class="page page-b" tabindex="-1">
-    <h1 class="sr-only">Mətndən işarəyə</h1>
+    <h1 class="sr-only" data-i18n="nav.b">Mətndən işarəyə</h1>
 
     <section class="card input-card" aria-labelledby="text-title">
       <div class="card-h">
-        <h2 id="text-title"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg><label for="text">Mətn</label></h2>
-        <span class="hint">(ən çox 300 simvol)</span>
+        <h2 id="text-title"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg><label for="text" data-i18n="b.text">Mətn</label></h2>
+        <span class="hint" data-i18n="b.hint">(ən çox 300 simvol)</span>
       </div>
       <div class="card-b">
-        <textarea id="text" rows="3" maxlength="300" placeholder="məs. Sabah Bakıya getmək istəyirəm"></textarea>
-        <div class="examples" role="group" aria-label="Nümunə cümlələr">
-          <span class="examples-label">Nümunələr:</span>
+        <textarea id="text" rows="3" maxlength="300" placeholder="məs. Sabah Bakıya getmək istəyirəm" data-i18n-attr="placeholder:b.ph"></textarea>
+        <div class="examples" role="group" aria-label="Nümunə cümlələr" data-i18n-attr="aria-label:b.exlabel">
+          <span class="examples-label" data-i18n="b.examples">Nümunələr:</span>
           <button type="button" class="chip-btn" data-example="Salam, necəsiniz?">Salam, necəsiniz?</button>
           <button type="button" class="chip-btn" data-example="Mən yaxşıyam.">Mən yaxşıyam.</button>
           <button type="button" class="chip-btn" data-example="Sabah Bakıya getmək istəyirəm.">Sabah Bakıya getmək istəyirəm.</button>
         </div>
         <div class="input-actions">
           <button id="mic" type="button" class="btn btn-ghost btn-lg btn-mic" hidden>
-            <svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg>Danış</button>
+            <svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg><span data-i18n="b.mic">Danış</span></button>
           <button id="show" type="button" class="btn btn-primary btn-lg" data-busy>
-            <svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>Göstər</button>
+            <svg class="ic" aria-hidden="true"><use href="#i-play"/></svg><span data-i18n="b.show">Göstər</span></button>
         </div>
         <p id="status" class="status" aria-live="polite"></p>
         <p id="mic-note" class="aside-note" hidden><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
-          <span>Mikrofon: Chrome nitqi tanımaq üçün səsi Google serverinə göndərir.</span></p>
+          <span data-i18n="b.micnote">Mikrofon: Chrome nitqi tanımaq üçün səsi Google serverinə göndərir.</span></p>
         <div class="vocab">
           <p class="aside-note"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg>
             <span id="vocab-summary" aria-live="polite">İşarə lüğəti yüklənir…</span></p>
           <details>
-            <summary>İşarəsi olan sözlərə bax<svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <summary><span data-i18n="b.vocabmore">İşarəsi olan sözlərə bax</span><svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
             <p id="vocab-words" class="note">Yüklənir…</p>
           </details>
         </div>
@@ -101,26 +140,26 @@
 
     <section class="card player-card" aria-labelledby="player-title">
       <div class="card-h">
-        <h2 id="player-title"><svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>İşarələr</h2>
+        <h2 id="player-title"><svg class="ic" aria-hidden="true"><use href="#i-video"/></svg><span data-i18n="b.signs">İşarələr</span></h2>
         <div class="player-tools">
-          <label class="speed">Sürət
+          <label class="speed"><span data-i18n="b.speed">Sürət</span>
             <select id="speed">
               <option value="0.75">0.75x</option>
               <option value="1" selected>1x</option>
             </select>
           </label>
           <button id="replay" type="button" class="btn btn-ghost btn-sm" disabled>
-            <svg class="ic" aria-hidden="true"><use href="#i-replay"/></svg>Təkrar</button>
+            <svg class="ic" aria-hidden="true"><use href="#i-replay"/></svg><span data-i18n="b.replay">Təkrar</span></button>
         </div>
       </div>
       <div class="card-b">
         <div class="player"><video id="video" muted playsinline preload="auto"></video></div>
         <p id="subtitle" class="subtitle" aria-live="polite"></p>
-        <ol id="chips" class="chips" aria-label="İşarələrin ardıcıllığı"></ol>
+        <ol id="chips" class="chips" aria-label="İşarələrin ardıcıllığı" data-i18n-attr="aria-label:b.chips"></ol>
         <div class="player-notes">
           <p id="coverage" class="note" aria-live="polite"></p>
           <p id="source" class="note"></p>
-          <p class="note">İşarələr mətndəki söz sırası ilə göstərilir; AzSL qrammatikası tətbiq olunmur.
+          <p class="note" data-i18n="b.rules">İşarələr mətndəki söz sırası ilə göstərilir; AzSL qrammatikası tətbiq olunmur.
             Qırmızı: lüğətdə işarəsi olmayan söz.</p>
         </div>
       </div>
@@ -129,13 +168,13 @@
 
   <footer class="footer">
     <div class="footer-inner">
-      <p class="credit">Videolar: AzSLD (Alishzade &amp; Hasanov, 2025), CC BY 4.0,
+      <p class="credit"><span data-i18n="b.credit1">Videolar: AzSLD (Alishzade &amp; Hasanov, 2025), CC BY 4.0,</span>
         <a href="https://doi.org/10.5281/zenodo.14222948">DOI 10.5281/zenodo.14222948</a>.
-        Kliplər komanda tərəfindən kəsilib və yenidən kodlanıb.</p>
+        <span data-i18n="b.credit2">Kliplər komanda tərəfindən kəsilib və yenidən kodlanıb.</span></p>
     </div>
   </footer>
 
-  <script src="ui.js" defer></script>
+  <script src="ui.js?v=20261009b" defer></script>
   <script type="module" src="signs.js"></script>
 </body>
 </html>
