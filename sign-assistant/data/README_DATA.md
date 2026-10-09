@@ -10,8 +10,8 @@ Licence and the attribution we must show: [reports/LICENSE_CHECK.md](reports/LIC
 
 We use only **AzSLD_Words_100**: 100 word classes, 7,248 short clips.
 
-`vocab.json` contains the 40 trained recognition classes, in model class order. Text-to-sign playback uses
-`playback_vocab.json`, which includes all 100 word classes and keeps those 40 entries intact. The smaller training
+`vocab.json` contains the 60 trained recognition classes, in model class order. Text-to-sign playback uses
+`playback_vocab.json`, which includes all 100 word classes and keeps the original 40 entries intact. The smaller training
 set's minimum-video threshold is not a requirement for showing a genuine reference clip.
 
 After building the index and group splits, generate the additional playback clips with:
@@ -55,6 +55,41 @@ The first run downloads the AzSLD_Sentences annotation JSONs into `data/raw/AzSL
 
 - `data/index.csv`: one row per video, format in CONTRACT.md.
 - `data/reports/dataset_summary.md`: counts, durations and class balance (also printed).
+
+## Curated recognition vocabulary
+
+The active camera model has 60 recognition classes. It retains the original 40 entries
+in order and appends these 20 genuine dataset classes:
+
+`SALAM`, `NECƏ`, `YAXŞI`, `SU`, `ATA`, `MƏKTƏB`, `AİLƏ`, `GƏLMƏK`, `AVTOMOBİL`, `OXUMAQ`,
+`İŞLƏMƏK`, `VAXT`, `AXŞAM`, `İNDİ`, `ÇOX`, `LAZIM`, `AVTOBUS`, `QAPI`, `BU HƏFTƏ`, `AD GÜNÜ`.
+
+The train/val recording-date groups in `splits.json` remain unchanged. The added signs already exist in
+AzSLD_Words_100, so this update requires no new dataset download. `playback_vocab.json` remains the separate
+100-class map; recognition class order does not need to match playback list order.
+The active GRU was trained on 5,080 prepared training clips and evaluated on 1,280 validation clips.
+
+`python -m data.choose_vocab --min-videos 25 --min-signers 6 --camera any` is the historical 40-class selector.
+Its default `--max-classes` is 40, and it rewrites both the vocabulary and the group split. Retain the supplied
+curated `vocab.json` and `splits.json` when rebuilding the expanded model:
+
+```bash
+python -m pose.extract_dataset --camera any
+python -m model.train --arch gru --camera any
+python -m model.calibrate --target 0.95
+python -m eval.evaluate --split val
+```
+
+Existing landmark files are reused; extraction adds missing vocabulary videos. Training must write matching
+`config.json` classes and weights, and calibration must run after every training run. Deploy `vocab.json` together
+with its matching `model/artifacts/model.pt` and `model/artifacts/config.json`.
+
+The original 40-class metrics are historical and retained in
+[../eval/REPORT_40_CLASSES.md](../eval/REPORT_40_CLASSES.md). The active 60-class evaluation is in
+[../eval/REPORT.md](../eval/REPORT.md): top-1 69.5%, macro-accuracy 81.5%, coverage 40.0% (512 of 1280),
+and selective accuracy 95.9% (491 of 512), at temperature 0.7558, tau 0.9 and margin 0.2.
+The added classes have only 2-11 validation clips each. Neither recording-date validation split measures
+unseen-signer accuracy; selected saved-landmark `/recognise` checks do not verify fresh webcam signing.
 
 ## What the data has, and what it does not
 

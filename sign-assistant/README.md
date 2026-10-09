@@ -4,7 +4,7 @@ Owner: C (Backend/LLM). Team rules, file ownership and data formats: [CONTRACT.m
 
 ## What it is
 
-A hackathon prototype for Azerbaijani Sign Language (AzSL). Direction A recognises 40 isolated signs from a laptop
+A hackathon prototype for Azerbaijani Sign Language (AzSL). Direction A recognises 60 isolated signs from a laptop
 webcam and builds an Azerbaijani sentence from them; Direction B shows clips from all 100 dataset word classes for
 typed or spoken text, using a separate playback vocabulary.
 
@@ -72,7 +72,8 @@ No Python 3.11 installed? With [uv](https://docs.astral.sh/uv/): `uv venv --pyth
 Raw videos, landmarks, clips and model weights are not in git. Either:
 
 - **Fast path (demo):** copy from a teammate who ran the pipeline: `model/artifacts/model.pt` and
-  `model/artifacts/config.json`, and `data/clips/*.mp4`. Then go to [Run](#run).
+  `model/artifacts/config.json`, and `data/clips/*.mp4`. Keep the matching `data/vocab.json` in model class order;
+  its IDs must exactly match `config.json`'s `classes`. Then go to [Run](#run).
 - **Full pipeline:** the steps below.
 
 ## Data preparation
@@ -84,13 +85,21 @@ Details: [data/README_DATA.md](data/README_DATA.md). Runtimes measured on the te
 |---|---|---|---|
 | 1. download | by hand from Zenodo: `AzSLD_Words_100.zip`, unzip into `data/raw/` | `data/raw/AzSLD_Words_100/` | 1.11 GB: about 20 min with 8 parallel connections |
 | 2. inspect | `python -m data.inspect_dataset` | `data/index.csv`, `data/reports/dataset_summary.md` | 3 min 7 s for 7,248 videos; the first run also fetches ~5 MB of Sentences annotations (about 20 min here) |
-| 3. vocabulary and split | `python -m data.choose_vocab --min-videos 25 --min-signers 6 --camera any` | `data/vocab.json`, `data/splits.json`, `data/reports/vocab_choice.md` | 0.1 s |
-| 4. extract landmarks | `python -m pose.extract_dataset --camera any` | `data/landmarks/<video_id>.npz` for the 5,863 vocabulary videos | 83 videos/min per process (measured on 24 videos); it runs cores-1 processes, `--shard i/n` splits it over laptops |
-| 5. clips | `python -m data.build_clips --camera any` | `data/clips/<id>.mp4` (40), `data/clips_index.json` | 15 s |
+| 3. vocabulary and split | Keep the curated `data/vocab.json` and original `data/splits.json` | Recognition class order and recording-date groups | Already supplied |
+| 4. extract landmarks | `python -m pose.extract_dataset --camera any` | `data/landmarks/<video_id>.npz` for vocabulary videos | 83 videos/min per process (measured on 24 videos); it runs cores-1 processes, `--shard i/n` splits it over laptops |
+| 5. clips | `python -m data.build_clips --camera any` | `data/clips/<id>.mp4`, `data/clips_index.json` | Original 40-class build: 15 s |
 
 `--camera any` is needed because AzSLD has no camera metadata (every clip is "unknown").
 
-Direction B uses `data/playback_vocab.json` (100 words), independent of the 40 recognition classes in
+The active camera model has 60 recognition classes. It keeps the original
+40 classes in order and adds 20 genuine dataset classes, including `SALAM`, `NECƏ`, `YAXŞI`, `SU` and `MƏKTƏB`;
+the original train/val group assignments stay intact. See [data/README_DATA.md](data/README_DATA.md) for the full list.
+
+`python -m data.choose_vocab --min-videos 25 --min-signers 6 --camera any` produced the historical 40-class
+selection. Its default cap remains 40; running it would replace the curated vocabulary and group split.
+For the expanded model, retain the supplied vocabulary and splits and continue with extraction and training.
+
+Direction B uses `data/playback_vocab.json` (100 words), independent of the recognition classes in
 `data/vocab.json`. Build its additional reference clips without replacing existing clips:
 
 ```bash
@@ -106,14 +115,16 @@ Common cases and verb forms such as `evə`, `Bakıya`, `gedirəm` and `istəyir�
 ## Train, calibrate, evaluate
 
 ```bash
-python -m model.train --arch gru --camera any   # -> model/artifacts/model.pt, config.json (5 min 44 s on the CPU)
-python -m model.calibrate --target 0.90          # temperature, tau, margin on val only (about 5 s)
-python -m eval.evaluate --split val              # val section of eval/REPORT.md (10 s)
+python -m pose.extract_dataset --camera any     # use the supplied curated vocabulary and recording-date splits
+python -m model.train --arch gru --camera any   # -> model/artifacts/model.pt, config.json
+python -m model.calibrate --target 0.95          # temperature, tau, margin on val only
+python -m eval.evaluate --split val              # current model's val section in eval/REPORT.md
 python -m eval.evaluate --split team             # after the team recordings: data/team_recordings/README.md
 python -m eval.evaluate --split test --final     # once, after the feature freeze
 ```
 
 Re-run `model.calibrate` after every training run: training writes placeholder thresholds.
+The original 40-class validation report is preserved in [eval/REPORT_40_CLASSES.md](eval/REPORT_40_CLASSES.md).
 
 ## Run
 
@@ -127,9 +138,35 @@ the state.
 
 ## Results
 
-From [eval/REPORT.md](eval/REPORT.md). **There is no unseen-signer number yet:** the test split is empty and the
+The active GRU model recognises 60 classes; training used 5,080 prepared clips. Its calibrated validation report
+is [eval/REPORT.md](eval/REPORT.md). The model has temperature 0.7558, tau 0.9 and margin 0.2.
+
+**There is no unseen-signer number yet:** the test split is empty and the
 team-recording section is pending (no recordings). The only numbers are on **val, which is not signer-independent**:
 AzSLD has no signer IDs, val is grouped by recording date, and the same signers are in train.
+
+### Active 60-class model
+
+Val: 1,280 clips from the original 9 validation groups.
+
+| metric | value |
+|---|---|
+| top-1 accuracy, no abstention | 69.5% |
+| macro-accuracy (classes are imbalanced) | 81.5% |
+| coverage at tau 0.9, margin 0.2 | 40.0% (512 of 1280) |
+| selective accuracy at tau 0.9, margin 0.2 | 95.9% (491 of 512) |
+
+For the 20 added classes, top-1 accuracy is 84.2% (96 of 114), and accepted predictions are 98.4% correct
+(62 of 63). Each added class has only 2-11 validation clips, so these per-class estimates have limited evidence.
+On the original 40-class subset, top-1 is 68.1%, coverage 38.5%, and selective accuracy 95.5% (429 of 449).
+
+All 20 added classes passed selected saved-landmark `POST /recognise` checks. These are checks with existing
+dataset landmarks; they do not verify a fresh webcam user or live sign segmentation.
+
+### Historical 40-class baseline
+
+The following figures are preserved in [eval/REPORT_40_CLASSES.md](eval/REPORT_40_CLASSES.md) and describe the
+previous model.
 
 Val: 1166 clips from 9 groups; model gru, 40 classes, temperature 0.8386, tau 0.9, margin 0.2.
 
@@ -145,14 +182,16 @@ MƏN / MƏNİM 23.0%, O / ORDA 17.6%.
 
 ## Limitations
 
-- **Vocabulary:** 40 trained recognition classes; 100 word classes for text-to-sign playback. Words outside the
+- **Vocabulary:** camera recognition is limited to 60 trained classes; 100 word classes are available for
+  text-to-sign playback. `GET /model-info` and `/vocab` identify the active recognition model. Words outside the
   playback vocabulary still need a genuine reference clip before they can be shown.
 - **Isolated signs only:** one sign at a time, hands down between signs; no continuous signing.
 - **No face or non-manual features:** facial expression, mouth and head movement are ignored.
 - **Data vs use:** a studio dataset of native signers (plain wall, 1280x960) against a laptop webcam and new users.
 - **Signer split:** no signer IDs, so val is not signer-independent and optimistic; the team recordings
   (non-native signers) are the only signer-independent test and are not recorded yet.
-- **Confusable signs:** MƏN / MƏNİM / MƏNƏ and O / ONUN / ORDA; MƏN mostly abstains.
+- **Confusable signs:** MƏN / MƏNİM / MƏNƏ and O / ONUN / ORDA remain difficult; abstention still rejects
+  60% of validation clips at the active thresholds.
 - **Sentences:** Claude can still phrase a sentence wrongly; the glosses are always shown under it.
 - **Direction B:** keeps Azerbaijani word order, not AzSL grammar. Local matching supports explicit aliases,
   common noun cases and a bounded set of verb forms; unsupported forms remain OOV. Greetings such as `necəsiniz`
@@ -174,12 +213,18 @@ MƏN / MƏNİM 23.0%, O / ORDA 17.6%.
 
 ## Status
 
-- **Works (tested):** Direction A end to end in Chrome with the real model: browser MediaPipe, WebSocket, model,
-  abstain, word buffer, compose, `/tts`. On dataset clips used as a fake camera, SABAH, BAKI, GETMƏK and İSTƏMƏK
-  were recognised (0.95-0.98) and MƏN abstained; an abstain never added a word. Direction B plays clips in order and
-  shows OOV words. Features + inference take 5-13 ms per segment on the CPU.
-- **Not working without keys:** Claude composition and Claude text-to-signs (fallbacks used), Azure TTS (503).
-- **Measured accuracy:** val only, not signer-independent: top-1 66.3%, macro 82.2%, coverage 36.8% at 96.3%
+- **Active model:** calibrated 60-class GRU. Direction B retains its 100-word clip map and shows OOV words.
+- **Validation:** 266 tests passed. The restarted live server reported 60 classes through `/model-info` and
+  `/vocab`, and 100 playback entries through `/sign-vocab`. HTTP `/recognise` accepted the correct sign for all
+  20 added classes on selected validation landmark payloads. Four text-to-sign playback phrases, including
+  `Salam, necəsiniz?`, also passed. These checks do not test a new webcam user or live segmentation.
+- **Historical browser check (40 classes):** Direction A ran end to end in Chrome with browser MediaPipe,
+  WebSocket, model, abstain, word buffer, compose and `/tts`. Dataset clips used as a fake camera produced
+  SABAH, BAKI, GETMƏK and İSTƏMƏK (0.95-0.98), while MƏN abstained; abstention never added a word.
+  The measured 5-13 ms feature/inference time refers to that model.
+- **Not working without keys:** LLM sentence composition and resolution of unmatched text spans (fallbacks used),
+  Azure TTS (503). Known playback words and supported inflections work locally without keys.
+- **Measured 60-class accuracy:** val only, not signer-independent: top-1 69.5%, macro 81.5%, coverage 40.0% at 95.9%
   selective accuracy. No unseen-signer accuracy.
 - **Not verified:** a real webcam with a real person, the team (unseen-signer) recordings, Claude and Azure live,
   Chrome speech recognition, the projector itself, the licence by a person.

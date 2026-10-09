@@ -8,6 +8,7 @@ Model selection uses val macro-accuracy only; the test split is never loaded.
 import argparse
 import json
 import random
+import re
 import sys
 import time
 from collections import Counter
@@ -48,6 +49,56 @@ def scores(pred, y):
     return float((pred == y).mean()), float(np.mean([(pred[y == c] == c).mean() for c in np.unique(y)]))
 
 
+def initialize_from(model, config, directory):
+    """Reuse a compatible encoder and classifier rows matched by class id.
+
+    Newly introduced classes keep the model's initial random rows. Validate the
+    complete checkpoint before changing the model; calibration belongs to the
+    new run and is never copied from the previous config. Return reused classes.
+    """
+    directory = Path(directory)
+    previous = json.loads((directory / "config.json").read_text(encoding="utf-8-sig"))
+    if not isinstance(previous, dict):
+        raise ValueError("initial checkpoint config must be a JSON object")
+    for key in ("arch", "feature_version", "n_features", "T"):
+        if key not in previous or key not in config or previous[key] != config[key]:
+            raise ValueError(f"initial checkpoint has incompatible {key}")
+    for name, settings in (("initial", previous), ("new", config)):
+        classes = settings.get("classes")
+        if (not isinstance(classes, list) or not classes
+                or any(not isinstance(identifier, str) or not re.fullmatch(r"[a-z0-9_]+", identifier)
+                       for identifier in classes)
+                or len(set(classes)) != len(classes)):
+            raise ValueError(f"{name} config needs nonempty, unique, valid class ids")
+
+    old_classes, new_classes = previous["classes"], config["classes"]
+    old_state = torch.load(directory / "model.pt", map_location="cpu", weights_only=True)
+    current = model.state_dict()
+    heads = {"head.weight", "head.bias"}
+    if not isinstance(old_state, dict) or set(old_state) != set(current) or not heads <= set(current):
+        raise ValueError("initial checkpoint parameter names differ from the new model")
+    for name, tensor in old_state.items():
+        expected = list(current[name].shape)
+        if name in heads:
+            if not expected or expected[0] != len(new_classes):
+                raise ValueError("new model classifier does not match its class ids")
+            expected[0] = len(old_classes)
+        if not isinstance(tensor, torch.Tensor) or tuple(tensor.shape) != tuple(expected):
+            raise ValueError(f"initial checkpoint has incompatible parameter {name}")
+
+    initialized = {name: tensor.clone() if name in heads else old_state[name]
+                   for name, tensor in current.items()}
+    old_index = {identifier: index for index, identifier in enumerate(old_classes)}
+    copied = 0
+    for index, identifier in enumerate(new_classes):
+        if identifier in old_index:
+            for name in heads:
+                initialized[name][index].copy_(old_state[name][old_index[identifier]])
+            copied += 1
+    model.load_state_dict(initialized, strict=True)
+    return copied
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description="Train the isolated-sign classifier.")
     p.add_argument("--arch", choices=["gru", "transformer"], default="gru")
@@ -58,7 +109,10 @@ def main(argv=None):
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--weight-decay", type=float, default=1e-2)
     p.add_argument("--seed", type=int, default=13)
+    p.add_argument("--data-dir", type=Path, default=ROOT / "data",
+                   help="folder with vocab.json, index.csv, splits.json and landmarks/")
     p.add_argument("--out", type=Path, default=ROOT / "model" / "artifacts")
+    p.add_argument("--init-from", type=Path, help="compatible checkpoint directory; reuse shared class rows by id")
     p.add_argument("--rebuild-cache", action="store_true")
     a = p.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
@@ -68,9 +122,11 @@ def main(argv=None):
     torch.manual_seed(a.seed)
     start = time.time()
 
-    vocab = load_vocab()
-    X_train, y_train, report = load_split("train", a.camera, T=T, rebuild=a.rebuild_cache)
-    X_val, y_val, _ = load_split("val", a.camera, T=T)
+    vocab = load_vocab(a.data_dir)
+    cache = a.data_dir / "landmarks" / f"features_v{FEATURE_VERSION}.npz"
+    X_train, y_train, report = load_split("train", a.camera, data_dir=a.data_dir, cache=cache,
+                                         T=T, rebuild=a.rebuild_cache)
+    X_val, y_val, _ = load_split("val", a.camera, data_dir=a.data_dir, cache=cache, T=T)
     n_classes = len(vocab)
     train_count, val_count = Counter(y_train.tolist()), Counter(y_val.tolist())
     print(f"features: {'cache' if report['cached'] else 'built'} ({time.time() - start:.0f}s); "
@@ -79,13 +135,20 @@ def main(argv=None):
           f"{report['cut']}, whole-clip fallbacks: {report['fallback']} (AzSLD clips are used whole, CONTRACT v2)")
     print("videos per class (train/val): " + ", ".join(
         f"{v['id']} {train_count[i]}/{val_count[i]}" for i, v in enumerate(vocab)))
-    if not len(y_train) or not len(y_val) or len(train_count) < n_classes:
+    if not n_classes or not len(y_train) or not len(y_val) or len(train_count) < n_classes:
         sys.exit("Some class has no training video, or val is empty. Nothing written.")
 
     config = {"feature_version": FEATURE_VERSION, "T": T, "n_features": N_FEATURES, "arch": a.arch,
               "classes": [v["id"] for v in vocab], "temperature": 1.0, "tau": 0.7, "margin": 0.15,
               "min_valid_ratio": 0.6, "min_hand_ratio": 0.5}
     model = build_model(config)
+    if a.init_from is not None:
+        try:
+            copied = initialize_from(model, config, a.init_from)
+        except Exception as err:  # a bad checkpoint must fail before writing output artifacts
+            sys.exit(f"Cannot initialize from {a.init_from}: {err}. Nothing written.")
+        print(f"Initialized encoder from {a.init_from}; reused {copied}/{n_classes} class rows by id, "
+              f"{n_classes - copied} new class rows retain random initialization.")
     weights = torch.tensor([1.0 / train_count[c] for c in y_train.tolist()], dtype=torch.double)
     sampler = WeightedRandomSampler(weights, num_samples=len(y_train), replacement=True,
                                     generator=torch.Generator().manual_seed(a.seed))

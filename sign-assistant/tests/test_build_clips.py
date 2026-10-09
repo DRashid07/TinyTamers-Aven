@@ -71,8 +71,9 @@ def test_playback_vocabulary_covers_every_dataset_label_and_keeps_recognition_id
     playback = json.loads((data_dir / "playback_vocab.json").read_text(encoding="utf-8"))
     with (data_dir / "index.csv").open(encoding="utf-8", newline="") as f:
         labels = {r["dataset_label"] for r in csv.DictReader(f)}
-    assert len(recognition) == 40
-    assert playback[:len(recognition)] == recognition
+    assert len(recognition) <= len(playback)
+    playback_by_id = {entry["id"]: entry for entry in playback}
+    assert all(playback_by_id[entry["id"]] == entry for entry in recognition)
     assert {v["dataset_label"] for v in playback} == labels
     assert len(playback) == len({v["id"] for v in playback}) == 100
     by_id = {v["id"]: v for v in playback}

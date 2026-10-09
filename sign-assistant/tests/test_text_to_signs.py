@@ -153,12 +153,13 @@ def test_greetings_use_extended_playback_vocab(client, monkeypatch):
     assert calls == []
 
 
-def test_playback_vocab_expands_coverage_without_changing_recognition_classes():
+def test_playback_vocab_covers_recognition_and_daily_words():
     playback = json.loads(t2s.VOCAB_PATH.read_text(encoding="utf-8"))
     recognition = json.loads((t2s.ROOT / "data" / "vocab.json").read_text(encoding="utf-8"))
     assert len(playback) == 100
     assert len({entry["id"] for entry in playback}) == len(playback)
-    assert playback[:len(recognition)] == recognition
+    playback_by_id = {entry["id"]: entry for entry in playback}
+    assert all(playback_by_id[entry["id"]] == entry for entry in recognition)
     assert {"salam", "nece", "yaxsi", "su", "ata", "mekteb"} <= {entry["id"] for entry in playback}
 
 

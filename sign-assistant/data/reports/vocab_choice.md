@@ -1,5 +1,9 @@
 # Vocabulary and group split
 
+This report records the original 40-class selection. The recognition vocabulary was subsequently
+extended with 20 everyday classes while retaining these class indices and the original group split.
+See [vocab_expansion.md](vocab_expansion.md) for the extension and its train/validation counts.
+
 Written by `python -m data.choose_vocab` (owner A). No model results were used.
 
 Settings: camera=any, min videos=25, min groups=6, max classes=40, seeds tried=200, group column=group.

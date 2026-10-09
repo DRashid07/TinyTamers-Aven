@@ -20,7 +20,7 @@ a deaf signer and a hearing person who meet at a service desk, in an office or o
 | Who uses it | a deaf person who signs | a hearing person who types or speaks |
 | Input | webcam, one sign at a time | typed text, or speech in Chrome |
 | Output | each recognised word, then an Azerbaijani sentence ("Cümlə qur") read aloud ("Səsləndir") | the signs as dataset video clips, one after another, with the word as a subtitle |
-| Vocabulary | 40 signs | 100 words; a word without a sign is shown in red |
+| Vocabulary | 60 signs | 100 words; a word without a sign is shown in red |
 | Page | `/` | `/signs.html` |
 
 The camera image never leaves the browser: MediaPipe finds the body and hand points there and only those
@@ -57,9 +57,9 @@ Every number below was measured in this project on 9 October 2026.
 | Area | Status | Measured evidence |
 |---|---|---|
 | Technical | Ready | Works end to end: MediaPipe in the browser at 27 ms per frame (about 37 fps on the laptop GPU), recognition on the server in 5–13 ms per sign; 245 automated tests pass. |
-| Data | Ready | Open AzSLD dataset: 100 words, 7,248 videos. 40 signs are recognised; 100 words are shown as video clips. |
-| Model | Partial | Validation: top-1 66%, macro 82%. When it answers it is right 96% of the time; it answers 37% of the clips and says "Əmin deyiləm" for the rest. |
-| Cost | Low | Training takes about 6 minutes on a laptop CPU. Recognition runs in the user's browser; the LLM and speech use free tiers. |
+| Data | Ready | Open AzSLD dataset: 100 words, 7,248 videos. 60 signs are recognised; 100 words are shown as video clips. |
+| Model | Partial | Validation: top-1 69.5%, macro 81.5%. When it answers it is right 95.9% of the time; it answers 40% of the clips and says "Əmin deyiləm" for the rest. |
+| Cost | Low | Training takes minutes on a laptop CPU (5 min 44 s for the first 40-class model). Recognition runs in the user's browser; the LLM and speech use free tiers. |
 | Legal, privacy | Ready for the demo | Data CC BY 4.0 with the signers' consent. Only landmark coordinates reach the server. |
 | Use | Needs testing | No install: phone, tablet, laptop and projector. The live demo is online; testing with deaf users comes next. |
 
@@ -70,19 +70,21 @@ Risks and what we do about them:
   [data/team_recordings/README.md](sign-assistant/data/team_recordings/README.md)), then tests with deaf users.
 - **Similar signs:** MƏN / MƏNİM / MƏNƏ and O / ONUN / ORDA get confused. The "not sure" rule keeps a wrong word out
   of the sentence; merging these classes is planned.
-- **Small vocabulary:** 40 recognised signs and 100 shown words. An extension to 60 recognised signs is under way.
+- **Small vocabulary:** 60 recognised signs (extended from 40 on 9 October 2026) and 100 shown words. More words
+  and more signers are the next step.
 - **Scope:** isolated signs only, no facial expressions yet. Next stage: continuous signing, face and mouth movement.
 
 ## Results
 
-Validation on 1,166 clips from 9 recording dates, GRU model, 40 classes ([sign-assistant/eval/REPORT.md](sign-assistant/eval/REPORT.md)):
+Validation on 1,280 clips from 9 recording dates, GRU model, 60 classes ([sign-assistant/eval/REPORT.md](sign-assistant/eval/REPORT.md);
+the first 40-class model: [sign-assistant/eval/REPORT_40_CLASSES.md](sign-assistant/eval/REPORT_40_CLASSES.md)):
 
 | metric | value |
 |---|---|
-| top-1 accuracy, no abstention | 66.3% |
-| macro accuracy (classes are imbalanced) | 82.2% |
-| answered clips (tau 0.9, margin 0.2) | 36.8% (429 of 1,166) |
-| accuracy of the answers | 96.3% (413 of 429) |
+| top-1 accuracy, no abstention | 69.5% |
+| macro accuracy (classes are imbalanced) | 81.5% |
+| answered clips (tau 0.9, margin 0.2) | 40.0% (512 of 1,280) |
+| accuracy of the answers | 95.9% (491 of 512) |
 
 These numbers are optimistic for a new signer: AzSLD has no signer IDs, so validation is split by recording date and
 the same signers appear in training.

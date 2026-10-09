@@ -20,7 +20,7 @@ xidmət masasında, ofisdə və ya telefonda üz-üzə gələn kar işarəçi il
 | Kim istifadə edir | işarə dilində danışan kar insan | yazan və ya danışan eşidən insan |
 | Giriş | kamera, hər dəfə bir işarə | yazılmış mətn və ya Chrome-da nitq |
 | Çıxış | tanınan hər söz, sonra Azərbaycan dilində cümlə («Cümlə qur») və onun səsləndirilməsi («Səsləndir») | işarələr dataset videoları kimi ardıcıl, söz altyazı ilə |
-| Lüğət | 40 işarə | 100 söz; işarəsi olmayan söz qırmızı göstərilir |
+| Lüğət | 60 işarə | 100 söz; işarəsi olmayan söz qırmızı göstərilir |
 | Səhifə | `/` | `/signs.html` |
 
 Kamera görüntüsü brauzerdən çıxmır: bədən və əl nöqtələrini MediaPipe brauzerin özündə tapır, serverə yalnız bu
@@ -57,9 +57,9 @@ Aşağıdakı hər rəqəm bu layihədə 9 oktyabr 2026-da ölçülüb.
 | Sahə | Vəziyyət | Ölçülmüş sübut |
 |---|---|---|
 | Texniki | Hazır | Başdan sona işləyir: brauzerdə MediaPipe 27 ms/kadr (noutbuk GPU-sunda ~37 fps), serverdə tanıma bir işarə üçün 5–13 ms; 245 avtomatik test keçir. |
-| Data | Hazır | AzSLD açıq dataseti: 100 söz, 7 248 video. 40 işarə tanınır, 100 söz video kliplə göstərilir. |
-| Model | Qismən | Val: top-1 66%, makro 82%. Cavab verdiyi halların 96%-i düzgündür; kliplərin 37%-nə cavab verir, qalanında «Əmin deyiləm» deyir. |
-| Xərc | Aşağı | Təlim adi noutbukda CPU ilə təxminən 6 dəqiqə çəkir. Tanıma istifadəçinin brauzerində işləyir; LLM və nitq pulsuz planlarda. |
+| Data | Hazır | AzSLD açıq dataseti: 100 söz, 7 248 video. 60 işarə tanınır, 100 söz video kliplə göstərilir. |
+| Model | Qismən | Val: top-1 69.5%, makro 81.5%. Cavab verdiyi halların 95.9%-i düzgündür; kliplərin 40%-nə cavab verir, qalanında «Əmin deyiləm» deyir. |
+| Xərc | Aşağı | Təlim adi noutbukda CPU ilə bir neçə dəqiqə çəkir (ilk 40 sinifli model: 5 dəq 44 san). Tanıma istifadəçinin brauzerində işləyir; LLM və nitq pulsuz planlarda. |
 | Hüquq, məxfilik | Demo üçün hazır | Data CC BY 4.0, işarəçilər razılıq verib. Serverə yalnız nöqtə koordinatları gedir. |
 | İstifadə | Sınaq lazım | Quraşdırma yoxdur: telefon, planşet, noutbuk, proyektor. Canlı demo internetdədir; növbəti addım kar istifadəçilərlə sınaqdır. |
 
@@ -70,20 +70,22 @@ Risklər və onlarla nə edirik:
   [data/team_recordings/README.md](sign-assistant/data/team_recordings/README.md)), sonra kar istifadəçilərlə sınaq.
 - **Oxşar işarələr:** MƏN / MƏNİM / MƏNƏ və O / ONUN / ORDA qarışır. «Əmin deyiləm» qaydası səhv sözü cümləyə
   salmır; bu sinifləri birləşdirmək planlaşdırılır.
-- **Kiçik lüğət:** 40 tanınan işarə və 100 göstərilən söz. Tanınan işarələri 60-a çatdırmaq üzərində iş gedir.
+- **Kiçik lüğət:** 60 tanınan işarə (9 oktyabr 2026-da 40-dan genişləndirilib) və 100 göstərilən söz. Növbəti addım:
+  daha çox söz və daha çox işarəçi.
 - **Əhatə:** yalnız ayrı-ayrı işarələr, üz ifadələri hələ yoxdur. Növbəti mərhələ: davamlı işarə dili, üz və ağız
   hərəkətləri.
 
 ## Nəticələr
 
-9 qeyd tarixindən 1 166 klip üzərində val, GRU modeli, 40 sinif ([sign-assistant/eval/REPORT.md](sign-assistant/eval/REPORT.md)):
+9 qeyd tarixindən 1 280 klip üzərində val, GRU modeli, 60 sinif ([sign-assistant/eval/REPORT.md](sign-assistant/eval/REPORT.md);
+ilk 40 sinifli model: [sign-assistant/eval/REPORT_40_CLASSES.md](sign-assistant/eval/REPORT_40_CLASSES.md)):
 
 | göstərici | dəyər |
 |---|---|
-| top-1 dəqiqlik, imtinasız | 66.3% |
-| makro dəqiqlik (siniflər balanssızdır) | 82.2% |
-| cavab verilən kliplər (tau 0.9, margin 0.2) | 36.8% (1 166-dan 429) |
-| cavabların dəqiqliyi | 96.3% (429-dan 413) |
+| top-1 dəqiqlik, imtinasız | 69.5% |
+| makro dəqiqlik (siniflər balanssızdır) | 81.5% |
+| cavab verilən kliplər (tau 0.9, margin 0.2) | 40.0% (1 280-dən 512) |
+| cavabların dəqiqliyi | 95.9% (512-dən 491) |
 
 Bu rəqəmlər yeni işarəçi üçün nikbindir: AzSLD-də işarəçi ID-si yoxdur, ona görə val qeyd tarixinə görə ayrılıb və
 eyni işarəçilər təlimdə də var.
