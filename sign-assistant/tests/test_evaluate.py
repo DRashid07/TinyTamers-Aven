@@ -62,6 +62,18 @@ def test_team_split(tmp_path):
     assert data["units"] == ["s1", "s2"] and data["no_segment"] == 1 and data["missing"] == 1
 
 
+def test_team_split_reads_signer_subfolders(tmp_path):
+    # data/team_recordings/README.md layout: <signer>/<id>_<n>.json
+    for signer in ("aysel", "rashid"):
+        folder = tmp_path / "team" / signer
+        folder.mkdir(parents=True)
+        (folder / "men_1.json").write_text(json.dumps({"id": "men", "signer": signer, "w": W, "h": H,
+                                                       "frames": sequence((5, {}), (15, raise_both()), (5, {}))}))
+    (tmp_path / "team" / "README.md").write_text("not a recording")
+    data = ev.team_split(tmp_path / "team", [{"id": "men", "gloss": "MƏN"}], 32)
+    assert data["n"] == 2 and data["units"] == ["aysel", "rashid"] and data["no_segment"] == 0
+
+
 def test_report_sections_keep_their_order(tmp_path):
     report = tmp_path / "REPORT.md"
     ev.write_section(report, "team", "<!-- BEGIN team -->\nT1\n<!-- END team -->")

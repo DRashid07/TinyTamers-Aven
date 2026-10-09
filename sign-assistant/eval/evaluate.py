@@ -56,10 +56,11 @@ def dataset_split(split, vocab, data_dir, T):
 
 
 def team_split(team_dir, vocab, T):
-    """Record-mode files {"id", "signer", "w", "h", "frames"} -> segment_offline cut (whole clip if no sign)."""
+    """Record-mode files {"id", "signer", "w", "h", "frames"} -> segment_offline cut (whole clip if no sign).
+    Reads team_dir/<signer>/<id>_<n>.json (data/team_recordings/README.md) and any *.json at any depth."""
     index_of = {v["id"]: i for i, v in enumerate(vocab)}
     cfg, X, y, infos, signers, no_segment, skipped = load_config(), [], [], [], set(), 0, 0
-    for path in sorted(team_dir.glob("*.json")):
+    for path in sorted(team_dir.rglob("*.json")):
         rec = json.loads(path.read_text(encoding="utf-8"))
         if rec.get("id") not in index_of:
             skipped += 1
