@@ -99,4 +99,7 @@ Static: / -> web/, /clips -> data/clips/
 
 ## LLM
 Official `anthropic` Python SDK. Model from env CLAUDE_MODEL (default claude-opus-5-5), effort low, structured outputs (JSON schema), timeout 10 s.
+Free alternative (v3, 2026-10-09): if ANTHROPIC_API_KEY is empty and GROQ_API_KEY is set, api/llm_client.structured_call uses Groq's
+OpenAI-compatible chat completions with a strict JSON schema, model from GROQ_MODEL (default openai/gpt-oss-120b), reasoning effort low,
+timeout 10 s, 1 retry. Callers do not change; "source" stays "llm".
 Any error, refusal, timeout or invalid output -> deterministic fallback. Never a guess.
