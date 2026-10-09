@@ -15,7 +15,7 @@ CLIPS_DIR = ROOT / "data" / "clips"
 # Load .env before importing routers, so they can read config at import time.
 load_dotenv(ROOT / ".env")
 
-from api import compose, routes_recognise, speech, text_to_signs  # noqa: E402
+from api import compose, join, routes_recognise, speech, text_to_signs  # noqa: E402
 
 CLIPS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -24,6 +24,7 @@ app.include_router(routes_recognise.router)
 app.include_router(compose.router)
 app.include_router(text_to_signs.router)
 app.include_router(speech.router)
+app.include_router(join.router)  # join requests from web/home.html
 
 
 @app.get("/health")

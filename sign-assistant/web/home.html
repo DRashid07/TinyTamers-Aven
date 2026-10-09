@@ -1,0 +1,591 @@
+<!doctype html>
+<!-- Owner: B (Frontend). Home page in the layout of Clopos's site: hero, perks, the two directions, who it is for,
+     numbers, privacy, questions, call to action, footer. Its join window ("Qoşulma sorğusu", home.js -> POST
+     /join-request) is Project V7's sign-up window without accounts: Aven has no personal access or log-in. -->
+<html lang="az">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Aven — Azərbaycan işarə dili köməkçisi</title>
+  <meta name="description" content="Aven kameradakı işarəni Azərbaycan dilində mətnə və səsə, yazılan mətni işarə videosuna çevirir. Quraşdırma və hesab lazım deyil.">
+  <meta name="theme-color" content="#F6F5FA">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%235B2BA6'/%3E%3Cg fill='%23fff' transform='translate(14 14) scale(.75)'%3E%3Cpath d='M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z'/%3E%3Cpath transform='rotate(180 24 24)' d='M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/onest-az.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/archivo-az.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    // Before the first paint (no flash): theme (saved, else the system setting), text size and contrast chosen in
+    // the app. The page is Azerbaijani only, so the saved language is not applied here.
+    (function () {
+      var d = document.documentElement;
+      function saved(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+      var theme = saved("aven-theme");
+      if (theme !== "dark" && theme !== "light") theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      d.dataset.theme = theme;
+      var text = saved("aven-text");
+      if (text === "1" || text === "2") d.dataset.text = text;
+      if (saved("aven-contrast") === "high") d.dataset.contrast = "high";
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css?v=20261009b">
+  <link rel="stylesheet" href="home.css?v=20261009a">
+</head>
+<body class="home">
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-logo" viewBox="0 0 48 48"><path d="M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z"/><path transform="rotate(180 24 24)" d="M4.7 43.3A4.7 4.7 0 0 1 0 38.6V17.8A20.4 17.8 0 0 1 20.4 0h10a1.2 1.2 0 0 1 1.2 1.2v7.3a1.2 1.2 0 0 1-1.2 1.2h-9.8a7.9 6.9 0 0 0-7.9 6.9v25.5a1.2 1.2 0 0 1-1.2 1.2z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8h.01"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 15V5.5a1.5 1.5 0 0 1 3 0V12M11 11.5V4a1.5 1.5 0 0 1 3 0v7.5M14 11.5V6a1.5 1.5 0 0 1 3 0v6.5M17 12.5V9a1.5 1.5 0 0 1 3 0v5.5a7.5 7.5 0 0 1-7.5 7.5H12a6.5 6.5 0 0 1-5-2.4l-3.2-4a1.7 1.7 0 0 1 2.6-2.2L8 15"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4V16a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 5.5 4zM8 8.5h8M8 12h5"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 7h11M9 12h11M9 17h11M4.5 7h.01M4.5 12h.01M4.5 17h.01"/></symbol>
+    <symbol id="i-lines" viewBox="0 0 24 24"><path d="M4 6.5h16M4 11h16M4 15.5h10"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.5l1.8 4.9 4.9 1.8-4.9 1.8L12 16.9l-1.8-4.9-4.9-1.8 4.9-1.8zM18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4zM15.5 9.2a4 4 0 0 1 0 5.6M18.2 6.5a7.8 7.8 0 0 1 0 11"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.6-2.4 2.2-2.4 3.8M12 17.2h.01"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0M3 7V4.5A1.5 1.5 0 0 1 4.5 3H7M17 3h2.5A1.5 1.5 0 0 1 21 4.5V7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.8 2.6 19.8h18.8zM12 10v4.4M12 17h.01"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.3v13.4L18.6 12z" fill="currentColor"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.3l5-2.8v9l-5-2.8"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.6 3.5h2.6l1.6 4-2 1.3a10 10 0 0 0 6.4 6.4l1.3-2 4 1.6v2.6a2 2 0 0 1-2.2 2A16.6 16.6 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M3.5 20.5h17M6 20.5v-15A1.5 1.5 0 0 1 7.5 4h9A1.5 1.5 0 0 1 18 5.5v15M9.5 8h1M13.5 8h1M9.5 11.5h1M13.5 11.5h1M10.5 20.5v-4h3v4"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></symbol>
+    <symbol id="i-user-plus" viewBox="0 0 24 24"><circle cx="10" cy="8.5" r="3.5"/><path d="M3.5 19.5a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5a6 6 0 0 1 12 0M15.5 5.6a3.2 3.2 0 0 1 0 6M17.5 14a6 6 0 0 1 3.5 5.5"/></symbol>
+    <symbol id="i-school" viewBox="0 0 24 24"><path d="M2.5 9.5 12 5l9.5 4.5L12 14z"/><path d="M6.5 11.6v4.2c1.4 1.4 3.5 2.2 5.5 2.2s4.1-.8 5.5-2.2v-4.2M21.5 9.5v5"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M10 20.5V15h4v5.5"/></symbol>
+    <symbol id="i-devices" viewBox="0 0 24 24"><path d="M4.5 15.5V7A1.5 1.5 0 0 1 6 5.5h10A1.5 1.5 0 0 1 17.5 7v1M2.5 18.5h11"/><rect x="15.5" y="10" width="6" height="10" rx="1.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2.3l1.5-2h5.4l1.5 2h2.3A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.8" r="3.3"/></symbol>
+    <symbol id="i-points" viewBox="0 0 24 24"><circle cx="6" cy="17.5" r="1.8"/><circle cx="12" cy="6" r="1.8"/><circle cx="18" cy="13" r="1.8"/><path d="M6.9 15.8 11.1 7.7M13.2 7.4l3.7 4.2"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></symbol>
+    <symbol id="i-video-off" viewBox="0 0 24 24"><path d="M3 3l18 18M16 10.3l5-2.8v9l-2.2-1.2M13.6 18H5.5A2.5 2.5 0 0 1 3 15.5v-7A2.5 2.5 0 0 1 5.5 6H6M10 6h3.5A2.5 2.5 0 0 1 16 8.5V12"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M20.5 3.5 10.2 13.8M20.5 3.5l-6.3 17-4-6.7-6.7-4z"/></symbol>
+    <!-- A signer as the camera page draws them: pose in light blue and one raised hand in amber (app.js colours) -->
+    <symbol id="art-signer" viewBox="0 0 320 240">
+      <path d="M78 240c2-64 34-90 82-90s80 26 82 90z" fill="#fff" fill-opacity=".06"/>
+      <circle cx="160" cy="80" r="31" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>
+      <g fill="none" stroke="#4fc3f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M124 160h72M124 160l-28-22 8-46M196 160l18 44 5 32"/>
+      </g>
+      <g fill="#4fc3f7">
+        <circle cx="124" cy="160" r="4"/><circle cx="196" cy="160" r="4"/><circle cx="96" cy="138" r="4"/>
+        <circle cx="214" cy="204" r="4"/><circle cx="160" cy="84" r="3"/><circle cx="150" cy="75" r="2.5"/><circle cx="170" cy="75" r="2.5"/>
+      </g>
+      <g fill="none" stroke="#ffb300" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M104 92l-8-5-6-7-4-7-3-6M104 92l-5-19-2-10-1-7-1-6M106 72V47M112 74l1-10 1-6v-6M104 92l13-14 3-8 1-5 1-5M99 73l7-1 6 2 5 4"/>
+      </g>
+      <g fill="#ffb300">
+        <circle cx="104" cy="92" r="3.2"/><circle cx="83" cy="67" r="2.4"/><circle cx="95" cy="50" r="2.4"/>
+        <circle cx="106" cy="47" r="2.4"/><circle cx="114" cy="52" r="2.4"/><circle cx="122" cy="60" r="2.4"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <a class="skip" href="#main">Məzmuna keç</a>
+
+  <div class="topbar" role="note">
+    <div class="topbar-inner">
+      <svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
+      <p><b>Köməkçi prototip.</b> Təsdiqlənmiş tərcümə deyil.
+        Tibbi və hüquqi qərarlar üçün surdotərcüməçiyə müraciət edin.</p>
+    </div>
+  </div>
+
+  <header class="header home-header" data-header>
+    <div class="header-inner">
+      <a class="logo" href="home.html" aria-label="Aven, ana səhifə">
+        <span class="logo-mark"><svg aria-hidden="true"><use href="#i-logo"/></svg></span>
+        <span class="logo-text"><b>Aven</b><small lang="en">A way to understand</small></span>
+      </a>
+      <nav class="home-nav" id="home-nav" aria-label="Bölmələr" data-nav>
+        <a href="#heller">Həllər</a>
+        <a href="#nece-isleyir">Necə işləyir</a>
+        <a href="#kimler-ucun">Kimlər üçün</a>
+        <a href="#mexfilik">Məxfilik</a>
+        <a href="#suallar">Suallar</a>
+        <div class="home-nav-cta">
+          <a class="btn btn-ghost" href="./">Tətbiqi aç</a>
+          <button type="button" class="btn btn-primary" data-join-open>Qoşulma sorğusu</button>
+        </div>
+      </nav>
+      <div class="header-tools home-tools">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Tünd tema" title="Tünd tema">
+          <svg class="ic i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+          <svg class="ic i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        </button>
+        <a class="btn btn-ghost home-open-app" href="./">Tətbiqi aç</a>
+        <button type="button" class="btn btn-primary home-join-top" data-join-open>Qoşulma sorğusu</button>
+        <button type="button" class="tool-btn home-burger" aria-controls="home-nav" aria-expanded="false" aria-label="Menyu" data-menu-toggle>
+          <svg class="ic i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+          <svg class="ic i-close" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- 1. Hero -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Azərbaycan işarə dili (AzSL) üçün</p>
+          <h1>İşarə dilini mətnə, mətni işarə dilinə çevirən köməkçi</h1>
+          <p class="lead">Aven kameradakı işarəni Azərbaycan dilində mətnə və səsə, yazılan mətni isə işarə videosuna
+            çevirir. Xidmət masasında, ofisdə və telefonda işləyir: quraşdırma və hesab lazım deyil.</p>
+          <div class="hero-cta">
+            <button type="button" class="btn btn-primary btn-lg" data-join-open>
+              <svg class="ic" aria-hidden="true"><use href="#i-user-plus"/></svg><span>Qoşulma sorğusu</span></button>
+            <a class="btn btn-ghost btn-lg" href="./"><span>Elə indi yoxlayın</span>
+              <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+          <ul class="trust">
+            <li><svg class="ic ok" aria-hidden="true"><use href="#i-lock"/></svg>Görüntü brauzerdən çıxmır</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Hesab lazım deyil</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-devices"/></svg>Telefon, planşet, noutbuk</li>
+          </ul>
+        </div>
+
+        <div class="hero-art" role="img"
+          aria-label="Aven tətbiqi: kamerada SABAH işarəsi tanınıb, sözlərdən «Mən sabah Bakıya getmək istəyirəm.» cümləsi qurulub">
+          <div class="mock" aria-hidden="true">
+            <div class="mock-stage">
+              <svg class="mock-signer"><use href="#art-signer"/></svg>
+              <span class="mock-pill"><svg class="ic"><use href="#i-check"/></svg>SABAH <small>96%</small></span>
+            </div>
+            <ol class="mock-chips"><li>MƏN</li><li>SABAH</li><li>BAKI</li><li>GETMƏK</li><li>İSTƏMƏK</li></ol>
+            <div class="mock-sentence">
+              <p>Mən sabah Bakıya getmək istəyirəm.</p>
+              <span class="mock-btn"><svg class="ic"><use href="#i-volume"/></svg>Səsləndir</span>
+            </div>
+          </div>
+          <div class="float-card float-private" aria-hidden="true">
+            <span class="float-ic"><svg class="ic"><use href="#i-lock"/></svg></span>
+            <span><b>Görüntü sizdə qalır</b><small>serverə yalnız nöqtələr gedir</small></span>
+          </div>
+          <div class="float-card float-unsure" aria-hidden="true">
+            <span class="float-ic"><svg class="ic"><use href="#i-help"/></svg></span>
+            <span><b>Əmin deyiləm</b><small>zəhmət olmasa təkrar edin</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Three perks under the hero -->
+    <section class="perks" aria-label="Üstünlüklər">
+      <div class="wrap perks-grid">
+        <article class="perk">
+          <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+          <h2>Rahat istifadə</h2>
+          <p>İri yazı və üç sadə addım. Hər vəziyyət ikon, mətn və rənglə göstərilir: ilk dəfə açan da dərhal başlayır.</p>
+        </article>
+        <article class="perk">
+          <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-devices"/></svg></span>
+          <h2>Əlçatanlıq</h2>
+          <p>Telefonda, planşetdə, noutbukda və proyektorda açılır. Açıq və tünd tema, böyük yazı və yüksək kontrast var.</p>
+        </article>
+        <article class="perk">
+          <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></span>
+          <h2>Etibarlılıq</h2>
+          <p>Əmin olmayanda təxmin etmir: «Əmin deyiləm, zəhmət olmasa təkrar edin» deyir və heç bir söz əlavə etmir.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. The two directions, as Clopos's product blocks: pill, heading, text, four checks, link -->
+    <section class="section" id="heller" aria-labelledby="heller-title">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Həllər</p>
+          <h2 id="heller-title">İki istiqamət, bir tətbiq</h2>
+          <p>Kar işarəçi də, eşidən insan da öz dilində danışır. Aven onların arasında körpü olur.</p>
+        </header>
+
+        <div class="feature">
+          <div class="feature-copy">
+            <p class="pill-label"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg>İşarədən mətnə</p>
+            <h3>İşarəni göstərin, Aven yazsın və səsləndirsin</h3>
+            <p>Kar işarəçi kameraya bir-bir işarə göstərir. Aven hər sözü tanıyır, sonra onlardan Azərbaycan dilində
+              cümlə qurur və eşidən insan üçün səsləndirir.</p>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>60 işarə tanınır</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Sözlərdən cümlə qurur</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Cümləni səsləndirir</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Əmin olmayanda təkrar istəyir</li>
+            </ul>
+            <a class="more" href="./">İşarədən mətnə keçin<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+          <div class="feature-art">
+            <ol class="flow" aria-label="İşarə, söz, cümlə və səs">
+              <li><span class="flow-ic"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg></span>
+                <span><b>İşarə</b><small>kamerada bir işarə</small></span></li>
+              <li><span class="flow-ic"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg></span>
+                <span><b>Sözlər</b><small>MƏN · SABAH · BAKI · GETMƏK · İSTƏMƏK</small></span></li>
+              <li><span class="flow-ic"><svg class="ic" aria-hidden="true"><use href="#i-lines"/></svg></span>
+                <span><b>Cümlə</b><small>«Mən sabah Bakıya getmək istəyirəm.»</small></span></li>
+              <li><span class="flow-ic"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></span>
+                <span><b>Səs</b><small>Azərbaycan dilində səsləndirmə</small></span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="feature feature-flip">
+          <div class="feature-copy">
+            <p class="pill-label"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg>Mətndən işarəyə</p>
+            <h3>Yazın və ya deyin, Aven işarə ilə göstərsin</h3>
+            <p>Eşidən insan mətni yazır və ya Chrome-da deyir. Aven hər söz üçün işarə videosunu ardıcıl göstərir,
+              sözün özünü altyazı kimi yazır.</p>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>100 söz video kliplə</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Mikrofonla demək olar (Chrome)</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Sürəti seçmək və təkrar baxmaq</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>İşarəsi olmayan söz qırmızı görünür</li>
+            </ul>
+            <a class="more" href="signs.html">Mətndən işarəyə keçin<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+          <div class="feature-art">
+            <div class="signs-mock" role="img" aria-label="Yazılan «Sabah Bakıya getmək istəyirəm» mətni üçün işarə videoları ardıcıl göstərilir">
+              <div class="signs-input" aria-hidden="true"><svg class="ic"><use href="#i-text"/></svg><span>Sabah Bakıya getmək istəyirəm</span></div>
+              <div class="signs-player" aria-hidden="true">
+                <svg class="mock-signer"><use href="#art-signer"/></svg>
+                <span class="signs-sub">BAKI</span>
+              </div>
+              <ul class="signs-chips" aria-hidden="true"><li>SABAH</li><li class="on">BAKI</li><li>GETMƏK</li><li>İSTƏMƏK</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. How it works: the camera page's first-visit steps -->
+    <section class="section section-band" id="nece-isleyir" aria-labelledby="steps-title">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Necə işləyir</p>
+          <h2 id="steps-title">Üç addımda ünsiyyət</h2>
+        </header>
+        <ol class="steps-grid">
+          <li class="step-card">
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3>Kameraya oturun</h3>
+            <p>Başdan belə qədər görünün, üzünüz işıqlı olsun.</p>
+          </li>
+          <li class="step-card">
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3>Hər dəfə bir işarə</h3>
+            <p>İşarəni göstərin, sonra əllərinizi aşağı salın. Tanınan söz yuxarıda görünür.</p>
+          </li>
+          <li class="step-card">
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3>Cümlə qurun</h3>
+            <p>Sözlər yığılanda «Cümlə qur», sonra «Səsləndir» düyməsini basın.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 5. Who it is for (Clopos: "all service areas") -->
+    <section class="section" id="kimler-ucun" aria-labelledby="who-title">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Kimlər üçün</p>
+          <h2 id="who-title">Üz-üzə ünsiyyət olan hər yerdə</h2>
+        </header>
+        <div class="who-grid">
+          <article class="who-card">
+            <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-building"/></svg></span>
+            <h3>Xidmət mərkəzləri</h3>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Dövlət xidmətləri</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Bank və poçt</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Qəbul masaları</li>
+            </ul>
+          </article>
+          <article class="who-card">
+            <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-school"/></svg></span>
+            <h3>Təhsil</h3>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Məktəb və universitet</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Kurslar</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>İşarə dilini öyrənənlər</li>
+            </ul>
+          </article>
+          <article class="who-card">
+            <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg></span>
+            <h3>Gündəlik ünsiyyət</h3>
+            <ul class="checks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Ailə və dostlar</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>İş yoldaşları</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Mağaza və kafelər</li>
+            </ul>
+          </article>
+        </div>
+        <div class="who-wide">
+          <span class="tile"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></span>
+          <div>
+            <h3>Sahəniz siyahıda yoxdur?</h3>
+            <p>Sorğu göndərin: Aveni harada və necə sınamaq istədiyinizi birlikdə müzakirə edək.</p>
+          </div>
+          <button type="button" class="btn btn-primary" data-join-open>Qoşulma sorğusu</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Numbers (only values measured in this project, eval/REPORT.md) -->
+    <section class="section section-band" aria-labelledby="numbers-title">
+      <div class="wrap">
+        <header class="section-head">
+          <p class="eyebrow">Rəqəmlərlə</p>
+          <h2 id="numbers-title">Ölçülmüş nəticələr</h2>
+        </header>
+        <ul class="stats">
+          <li><b>60</b><span>tanınan işarə</span></li>
+          <li><b>95.9%</b><span>cavab verdiyi hallarda düzgündür</span></li>
+          <li><b>100</b><span>söz video kliplə göstərilir</span></li>
+          <li><b>0</b><span>video kadr serverə göndərilir</span></li>
+        </ul>
+        <p class="stats-note">Validasiya: 1 280 klip, 9 oktyabr 2026. Aven kliplərin 40%-nə cavab verir,
+          qalanında «Əmin deyiləm» deyir. Model heç görmədiyi işarəçilərdə hələ ayrıca yoxlanmayıb.</p>
+      </div>
+    </section>
+
+    <!-- 7. Privacy (Clopos: the support block with two key facts) -->
+    <section class="section" id="mexfilik" aria-labelledby="privacy-title">
+      <div class="wrap privacy">
+        <div class="privacy-copy">
+          <p class="pill-label"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Məxfilik</p>
+          <h2 id="privacy-title">Görüntünüz sizdə qalır</h2>
+          <p>Bədən və əl nöqtələrini MediaPipe brauzerin özündə tapır. Serverə video yox, yalnız bu nöqtələrin
+            koordinatları gedir.</p>
+          <ul class="facts">
+            <li><b>Video yox</b><span>serverə yalnız nöqtə koordinatları</span></li>
+            <li><b>Hesab yox</b><span>tətbiq qeydiyyatsız və girişsiz işləyir</span></li>
+          </ul>
+          <p class="privacy-note">Qoşulma sorğusunda yazdığınız ad və telefon yalnız sizinlə əlaqə saxlamaq üçün
+            istifadə olunur.</p>
+        </div>
+        <div class="pflow" role="img" aria-label="Kamera görüntüsü brauzerdə qalır, MediaPipe nöqtələri tapır, serverə yalnız nöqtələr gedir">
+          <div class="pflow-node" aria-hidden="true">
+            <span class="pflow-ic"><svg class="ic"><use href="#i-camera"/></svg></span>
+            <b>Kamera</b><small>görüntü burada qalır</small>
+          </div>
+          <span class="pflow-link" aria-hidden="true"></span>
+          <div class="pflow-node" aria-hidden="true">
+            <span class="pflow-ic"><svg class="ic"><use href="#i-points"/></svg></span>
+            <b>Brauzer</b><small>MediaPipe nöqtələri tapır</small>
+          </div>
+          <span class="pflow-link pflow-ok" aria-hidden="true"><em>yalnız nöqtələr</em></span>
+          <div class="pflow-node" aria-hidden="true">
+            <span class="pflow-ic"><svg class="ic"><use href="#i-server"/></svg></span>
+            <b>Server</b><small>işarəni tanıyır</small>
+          </div>
+          <p class="pflow-blocked" aria-hidden="true"><svg class="ic"><use href="#i-video-off"/></svg>Video serverə getmir</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Questions -->
+    <section class="section section-band" id="suallar" aria-labelledby="faq-title">
+      <div class="wrap faq-wrap">
+        <header class="section-head">
+          <p class="eyebrow">Suallar</p>
+          <h2 id="faq-title">Tez-tez verilən suallar</h2>
+        </header>
+        <div class="faq">
+          <details>
+            <summary>Aven-dən istifadə üçün qeydiyyat lazımdır?<svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <p>Xeyr. Aven-də fərdi hesab və giriş yoxdur: «Elə indi yoxlayın» tətbiqi dərhal açır. Qoşulma sorğusu
+              qurumlar və tərəfdaşlar üçündür: Aveni sınamaq və ya layihəyə dəstək olmaq istəyirsinizsə, komandamız
+              sizinlə əlaqə saxlayır.</p>
+          </details>
+          <details>
+            <summary>Aven surdotərcüməçini əvəz edirmi?<svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <p>Xeyr. Aven köməkçi prototipdir, təsdiqlənmiş tərcümə deyil. Tibbi və hüquqi qərarlar üçün
+              surdotərcüməçiyə müraciət edin.</p>
+          </details>
+          <details>
+            <summary>Hansı cihazlarda işləyir?<svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <p>Kamerası olan noutbuk, planşet və telefonda, Chrome brauzerində. Heç nə quraşdırmaq lazım deyil.</p>
+          </details>
+          <details>
+            <summary>Neçə işarə tanıyır?<svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <p>Hazırda 60 işarə tanınır, 100 söz video kliplə göstərilir. Lüğət AzSLD açıq datasetinə əsaslanır və
+              genişləndirilir.</p>
+          </details>
+          <details>
+            <summary>Sorğudakı məlumatlarım nə üçün istifadə olunur?<svg class="ic" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <p>Ad, telefon, qurum və seçimləriniz yalnız sizinlə əlaqə saxlamaq üçün istifadə olunur. Kamera
+              görüntüsü və ya tətbiqdə göstərdiyiniz işarələr sorğuya qoşulmur.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Call to action (Clopos: "... asanlaşacaq!") -->
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="wrap">
+        <div class="cta-box">
+          <div>
+            <h2 id="cta-title">Aven ilə ünsiyyət asanlaşacaq!</h2>
+            <p>Qurumunuzda sınamaq və ya layihəyə dəstək olmaq üçün sorğu göndərin.</p>
+          </div>
+          <div class="cta-actions">
+            <button type="button" class="btn btn-lg cta-primary" data-join-open>
+              <svg class="ic" aria-hidden="true"><use href="#i-user-plus"/></svg><span>Qoşulma sorğusu</span></button>
+            <a class="btn btn-lg cta-ghost" href="./"><span>Elə indi yoxlayın</span>
+              <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="home-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="home.html" aria-label="Aven, ana səhifə">
+          <span class="logo-mark"><svg aria-hidden="true"><use href="#i-logo"/></svg></span>
+          <span class="logo-text"><b>Aven</b><small lang="en">A way to understand</small></span>
+        </a>
+        <p>Azərbaycan işarə dili üçün köməkçi veb tətbiq: işarədən mətnə və mətndən işarəyə.</p>
+      </div>
+      <nav class="footer-col" aria-label="Həllər">
+        <p class="footer-title">Həllər</p>
+        <a href="./">İşarədən mətnə</a>
+        <a href="signs.html">Mətndən işarəyə</a>
+      </nav>
+      <nav class="footer-col" aria-label="Aven">
+        <p class="footer-title">Aven</p>
+        <a href="#nece-isleyir">Necə işləyir</a>
+        <a href="#kimler-ucun">Kimlər üçün</a>
+        <a href="#mexfilik">Məxfilik</a>
+        <a href="#suallar">Suallar</a>
+      </nav>
+      <div class="footer-col">
+        <p class="footer-title">Mənbə</p>
+        <p>Model və videolar: AzSLD (Alishzade &amp; Hasanov, 2025), CC BY 4.0,
+          <a href="https://doi.org/10.5281/zenodo.14222948">DOI 10.5281/zenodo.14222948</a></p>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>© 2026 Aven</p>
+      <p>Köməkçi prototip, təsdiqlənmiş tərcümə deyil.</p>
+    </div>
+  </footer>
+
+  <!-- Join request (Clopos's "Qoşulma sorğusu" in Project V7's sign-up window; no password and no account) -->
+  <dialog class="join" aria-labelledby="join-title" data-join>
+    <div class="join-body">
+      <button type="button" class="tool-btn join-close" aria-label="Bağla" title="Bağla" data-join-close>
+        <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+
+      <div class="join-view" data-join-form-view>
+        <div class="join-head">
+          <span class="join-icon"><svg class="ic" aria-hidden="true"><use href="#i-user-plus"/></svg></span>
+          <h2 id="join-title">Qoşulma sorğusu</h2>
+          <p>Formu doldurun, komandamız qısa müddətdə sizinlə əlaqə saxlayacaq.</p>
+        </div>
+
+        <form id="join-form" class="join-form" novalidate>
+          <!-- spam guards from Project V7: a field people never see, and the time the form was opened (signed by the server) -->
+          <input class="join-trap" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="hidden" name="form_token">
+
+          <div class="join-field">
+            <label for="join-name">Ad və soyad</label>
+            <div class="input-wrap">
+              <svg class="ic" aria-hidden="true"><use href="#i-person"/></svg>
+              <input id="join-name" name="name" type="text" placeholder="Ad və soyadınızı yazın" autocomplete="name" maxlength="80" required>
+            </div>
+          </div>
+
+          <div class="join-field">
+            <label for="join-phone">Telefon nömrəsi</label>
+            <div class="input-wrap">
+              <svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>
+              <input id="join-phone" name="phone" type="tel" placeholder="+994 50 123 45 67" autocomplete="tel" inputmode="tel"
+                maxlength="20" aria-describedby="join-phone-hint" required>
+            </div>
+            <small id="join-phone-hint" class="join-hint">+994 və ya 0 ilə başlayan mobil və ya şəhər nömrəsi</small>
+          </div>
+
+          <div class="join-field">
+            <label for="join-org">Qurum <span class="join-optional">(istəyə bağlı)</span></label>
+            <div class="input-wrap">
+              <svg class="ic" aria-hidden="true"><use href="#i-building"/></svg>
+              <input id="join-org" name="organization" type="text" placeholder="Qurumun və ya təşkilatın adı" autocomplete="organization" maxlength="100">
+            </div>
+          </div>
+
+          <div class="join-field">
+            <label for="join-sector">Sahəni seçin</label>
+            <select id="join-sector" name="sector" required>
+              <option value="" selected disabled>Seçin…</option>
+              <option value="government">Dövlət xidməti</option>
+              <option value="service">Bank və xidmət</option>
+              <option value="education">Təhsil</option>
+              <option value="community">İcma və QHT</option>
+              <option value="other">Digər</option>
+            </select>
+          </div>
+
+          <fieldset class="join-field roles" id="join-purpose">
+            <legend>Müraciət məqsədi</legend>
+            <div class="role-options">
+              <label class="role-option">
+                <input type="radio" name="purpose" value="try" required>
+                <span class="role-card">
+                  <svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg>
+                  <strong>Sınamaq istəyirəm</strong>
+                  <small>Aveni qurumumuzda istifadə etmək</small>
+                </span>
+              </label>
+              <label class="role-option">
+                <input type="radio" name="purpose" value="support">
+                <span class="role-card">
+                  <svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>
+                  <strong>Dəstək olmaq istəyirəm</strong>
+                  <small>İşarə yazısı, yoxlama, tərəfdaşlıq</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="check" for="join-consent">
+            <input id="join-consent" name="consent" type="checkbox" required>
+            <span class="check-box" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>
+            <span>Məlumatlarımın yalnız bu sorğu ilə bağlı mənimlə əlaqə üçün istifadəsinə razıyam.</span>
+          </label>
+
+          <p class="join-error" id="join-error" role="alert" data-join-error hidden></p>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block" data-join-submit>
+            <svg class="ic" aria-hidden="true"><use href="#i-send"/></svg><span>Göndər</span></button>
+
+          <p class="join-note"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>
+            <span>Aven-də fərdi hesab yoxdur: tətbiqdən qeydiyyatsız istifadə edə bilərsiniz.</span></p>
+        </form>
+      </div>
+
+      <div class="join-view join-done" data-join-done-view hidden>
+        <span class="join-icon join-icon-ok"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></span>
+        <h2 tabindex="-1" data-join-done-title>Sorğu uğurla göndərildi!</h2>
+        <p data-join-done-text>Təşəkkür edirik! Sorğunuzu qəbul etdik, komandamız qısa müddətdə sizinlə əlaqə saxlayacaq.</p>
+        <div class="join-done-actions">
+          <button type="button" class="btn btn-primary btn-lg" data-join-close>Oldu, təşəkkürlər!</button>
+          <a class="btn btn-ghost btn-lg" href="./">Tətbiqi yoxlayın</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="ui.js?v=20261009b" defer></script>
+  <script src="home.js?v=20261009a" defer></script>
+</body>
+</html>

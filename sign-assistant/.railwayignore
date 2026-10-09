@@ -19,6 +19,9 @@ data/team_recordings/
 data/reports/
 scripts/out/
 
+# qoşulma sorğuları (ad və telefon): lokal sınaqlar serverə getməsin
+data/join_requests/
+
 # serverə lazım olmayanlar
 tests/
 eval/

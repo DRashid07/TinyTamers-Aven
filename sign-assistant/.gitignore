@@ -3,6 +3,7 @@ data/raw/
 data/landmarks/
 data/clips/
 data/team_recordings/
+data/join_requests/
 model/artifacts/*.pt
 web/models/
 scripts/out/
