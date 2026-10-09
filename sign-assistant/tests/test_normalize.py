@@ -24,6 +24,17 @@ def test_frames_to_arrays_shapes_and_missing():
     assert np.isnan(pose[1]).all() and np.isnan(hands[1, 1]).all() and not np.isnan(hands[1, 0]).any()
 
 
+@pytest.mark.parametrize("bad", [
+    {"pose": [[1.0]]},  # would broadcast to 33 x 4 without the check
+    {"pose": [[0.5, 0.5, 0.0]] * 33},
+    {"hands": [[[0.5, 0.5]] * 21]},
+    {"hands": [[[0.5, 0.5, 0.0]] * 21] * 3},
+])
+def test_frames_to_arrays_rejects_wrong_shapes(bad):
+    with pytest.raises(ValueError):
+        frames_to_arrays([{**fake_frame(0.0), **bad}])
+
+
 @pytest.mark.parametrize("shift, zoom", [((0.1, -0.05), 1.0), ((0.0, 0.0), 0.6), ((-0.03, 0.02), 1.3)])
 def test_translation_and_scale_do_not_change_body_coords(shift, zoom):
     ref, _ = body_of([fake_frame(0.0)])
