@@ -62,7 +62,8 @@ AZ = {
 }
 
 # Spelling slips in dataset labels: shown gloss -> correct word (dataset_label stays exact).
-GLOSS_FIX = {"QARABAQ": "QARABAĞ", "ÜNVANLİ": "ÜNVANLI", "EŞİTMƏ MƏHDÜDİYYƏTLİ": "EŞİTMƏ MƏHDUDİYYƏTLİ"}
+GLOSS_FIX = {"QARABAQ": "QARABAĞ", "ÜNVANLİ": "ÜNVANLI",
+             "EŞİTMƏ MƏHDÜDİYYƏTLİ": "EŞİTMƏ MƏHDUDİYYƏTLİ"}
 
 _ASCII = str.maketrans("ƏəİıIÖöÜüĞğÇçŞş", "eeiiioouuggccss")
 
@@ -83,8 +84,8 @@ def class_stats(rows):
     videos, signers = Counter(), defaultdict(set)
     for r in rows:
         videos[r["dataset_label"]] += 1
-        if r["signer_id"]:
-            signers[r["dataset_label"]].add(r["signer_id"])
+        if r["signer"]:
+            signers[r["dataset_label"]].add(r["signer"])
     return {lab: (videos[lab], len(signers[lab])) for lab in videos}
 
 
@@ -108,7 +109,7 @@ def choose(stats, min_videos, min_signers, max_classes):
 def split_signers(rows, labels, seeds, frac=0.15):
     """Signers -> train/val/test (~70/15/15 by signer). Keeps the seed whose smallest
     per-class video count in val and test is largest (ties: video shares closest to frac)."""
-    per = Counter((r["signer_id"], r["dataset_label"]) for r in rows)
+    per = Counter((r["signer"], r["dataset_label"]) for r in rows)
     signers = sorted({s for s, _ in per})
     k = max(1, round(frac * len(signers)))
     if len(signers) < 3:
@@ -141,11 +142,14 @@ def main(argv=None):
     p.add_argument("--max-classes", type=int, default=40, help="vocabulary size cap (target 30-50)")
     p.add_argument("--seeds", type=int, default=200, help="number of split seeds to try")
     p.add_argument("--data-dir", type=Path, default=DATA, help="folder with index.csv; outputs go here")
+    p.add_argument("--signer-column", default="signer_id",
+                   help="index.csv column that identifies the signer; anything else is a declared proxy")
     a = p.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
 
-    rows = [r for r in load_index(a.data_dir / "index.csv") if a.camera in ("any", r["camera"])]
+    rows = [dict(r, signer=r.get(a.signer_column) or "") for r in load_index(a.data_dir / "index.csv")
+            if a.camera in ("any", r["camera"])]
     if not rows:
         sys.exit(f"index.csv has no '{a.camera}' camera rows (is task P1 done?). Nothing written.")
     stats = class_stats(rows)
@@ -160,12 +164,14 @@ def main(argv=None):
     ids = [v["id"] for v in vocab]
     assert len(set(ids)) == len(ids) and all(re.fullmatch(r"[a-z0-9_]+", i) for i in ids), ids
 
-    split_rows = [r for r in rows if r["signer_id"] and r["dataset_label"] in why]
-    no_signer = sum(1 for r in rows if not r["signer_id"] and r["dataset_label"] in why)
+    split_rows = [r for r in rows if r["signer"] and r["dataset_label"] in why]
+    no_signer = sum(1 for r in rows if not r["signer"] and r["dataset_label"] in why)
     seed, parts, counts, worst = split_signers(split_rows, labels, a.seeds)
     if worst == 0:
         sys.exit(f"No seed out of {a.seeds} puts every class in val and test. Nothing written.")
 
+    proxy = ("" if a.signer_column == "signer_id"
+             else " (a PROXY, not real signer IDs: one signer may be in several splits)")
     cand = []
     for i, (word, lab) in enumerate(CANDIDATES, 1):
         v, s = stats.get(lab, (0, 0))
@@ -202,8 +208,9 @@ def main(argv=None):
         "",
         "## Signer split",
         "",
+        f"Groups = the '{a.signer_column}' column{proxy}. "
         f"Seed {seed}: the smallest per-class video count in val/test is {worst}. "
-        f"{no_signer} vocab videos have no signer_id and are left out.",
+        f"{no_signer} vocab videos have an empty {a.signer_column} and are left out.",
         "",
         *md_table(["split", "signers", "videos", "share"],
                   [(n, len(parts[n]), n_videos[n], f"{n_videos[n] / total:.0%}") for n in parts]),
@@ -218,7 +225,8 @@ def main(argv=None):
 
     (a.data_dir / "vocab.json").write_text(
         "[\n" + ",\n".join(json.dumps(v, ensure_ascii=False) for v in vocab) + "\n]\n", encoding="utf-8")
-    note = (f"Split by signer_id from data/index.csv, about 70/15/15 by signer, camera={a.camera}. "
+    note = (f"Split by the '{a.signer_column}' column of data/index.csv{proxy}, about 70/15/15 by group, "
+            f"camera={a.camera}. "
             f"Best of {a.seeds} seeds: every vocab class has >= {worst} videos in val and in test. "
             "Test is read only by python -m eval.evaluate --split test --final.")
     splits = {"seed": seed, **parts, "note": note}

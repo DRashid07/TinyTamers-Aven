@@ -80,6 +80,18 @@ def test_empty_index_writes_nothing(tmp_path):
     assert not (tmp_path / "vocab.json").exists()
 
 
+def test_proxy_signer_column_is_declared(tmp_path):
+    # P1 output style: no signer_id, camera unknown, recording date in an extra "group" column
+    rows = [r[:3] + ["", "unknown"] + r[5:] + [f"rec_2023-01-{int(r[3][1:]) + 1:02d}"]
+            for r in make_rows("SABAH", 8) + make_rows("YOX", 8)]
+    with open(tmp_path / "index.csv", "w", encoding="utf-8", newline="") as f:
+        csv.writer(f).writerows([HEADER + ["group"]] + rows)
+    cv.main(["--data-dir", str(tmp_path), "--camera", "any", "--signer-column", "group", "--seeds", "5"])
+    splits = json.loads((tmp_path / "splits.json").read_text(encoding="utf-8"))
+    assert all(s.startswith("rec_") for s in splits["train"] + splits["val"] + splits["test"])
+    assert "PROXY" in splits["note"]
+
+
 def test_no_signer_ids_fails(tmp_path):
     rows = make_rows("SABAH", 8)
     for r in rows:
