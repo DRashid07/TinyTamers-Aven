@@ -13,6 +13,20 @@ const POSE_UPPER = PoseLandmarker.POSE_CONNECTIONS.filter((c) => c.start < UPPER
 const MAX_WORDS = 12; // POST /compose-sentence accepts 1-12 ids
 const HOLD_MS = 2500; // how long a result stays in the status pill
 const ABSTAIN_TEXT = "Əmin deyiləm, zəhmət olmasa təkrar edin.";
+// Short reason under the abstain message, so the signer knows what to change. Never a word.
+const ABSTAIN_DETAIL = {
+  too_short: "işarə çox qısa oldu",
+  too_long: "işarə çox uzun oldu: işarələr arasında əlləri aşağı salın",
+  no_hands: "əllər görünmədi",
+  invalid_pose: "çiyinlər görünmür və ya kameraya çox yaxınsınız",
+  low_confidence: "tanınmadı və ya bu söz lüğətdə yoxdur",
+  small_margin: "iki işarə arasında qərar verə bilmədi",
+  model_not_loaded: "model yüklənməyib",
+};
+// Training videos show the signer from the head to the waist: shoulder distance 0.28-0.36 of the frame
+// height. The server abstains above 0.44 (api/routes_recognise.py), so the idle pill says how to sit.
+const MAX_SHOULDER_WIDTH = 0.44;
+const MIN_SHOULDER_WIDTH = 0.18;
 
 const $ = (id) => document.getElementById(id);
 const video = $("video");
@@ -29,6 +43,7 @@ const recCounts = {};
 const words = []; // the word buffer: {id, gloss} of "ok" results only, never of an abstain
 let pillTimer = null;
 let ttsAvailable = true; // false after /tts answers 503 (not configured)
+let framing = { hint: "", candidate: "", frames: 0 }; // hint shown in the idle pill once stable for 15 frames
 
 function setText(id, text, cls) {
   $(id).textContent = text;
@@ -74,6 +89,7 @@ function loop() {
   const h = hands.detectForVideo(video, t);
   countFps(t, performance.now() - t);
   draw(p, h);
+  updateFraming(p.landmarks[0]);
 
   const frame = {
     type: "frame",
@@ -124,7 +140,7 @@ function connect() {
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "start", w: video.videoWidth, h: video.videoHeight }));
     setText("server", "Serverə qoşulub", "ok");
-    setPill("idle", "Gözləyirəm");
+    idlePill();
   };
   ws.onmessage = (event) => {
     try {
@@ -151,7 +167,31 @@ function setPill(state, text, detail = "", holdMs = 0) {
     small.textContent = detail;
     pill.append(small);
   }
-  if (holdMs) pillTimer = setTimeout(() => setPill("idle", "Gözləyirəm"), holdMs);
+  if (holdMs) pillTimer = setTimeout(idlePill, holdMs);
+}
+
+function idlePill() {
+  setPill("idle", "Gözləyirəm", framing.hint);
+}
+
+// How the signer sits compared with the training videos (pose landmarks of the unmirrored frame).
+function framingHint(pose) {
+  if (!pose) return "Kamerada insan görünmür";
+  const [left, right] = [pose[11], pose[12]];
+  if ((left.visibility ?? 0) < 0.5 || (right.visibility ?? 0) < 0.5) return "Çiyinləriniz görünmür: bir az geri oturun";
+  const width = Math.abs(left.x - right.x) * (video.videoWidth / video.videoHeight);
+  if (width > MAX_SHOULDER_WIDTH) return "Kameraya çox yaxınsınız: geri oturun ki, başdan belə qədər görünəsiniz";
+  if (width < MIN_SHOULDER_WIDTH) return "Kameradan çox uzaqsınız: bir az yaxınlaşın";
+  return "";
+}
+
+function updateFraming(pose) {
+  const hint = framingHint(pose);
+  framing.frames = hint === framing.candidate ? framing.frames + 1 : 0;
+  framing.candidate = hint;
+  if (framing.frames < 15 || hint === framing.hint) return; // about half a second without change
+  framing.hint = hint;
+  if ($("pill").classList.contains("idle")) idlePill();
 }
 
 function showMessage(msg) {
@@ -164,7 +204,7 @@ function showMessage(msg) {
     addWord(msg.id, msg.gloss);
     setPill("ok", msg.gloss, `əminlik ${Math.round(msg.confidence * 100)}%`, HOLD_MS);
   } else {
-    setPill("abstain", ABSTAIN_TEXT, "", HOLD_MS); // an abstain never adds a word
+    setPill("abstain", ABSTAIN_TEXT, ABSTAIN_DETAIL[msg.reason] || "", HOLD_MS); // an abstain never adds a word
   }
 }
 
