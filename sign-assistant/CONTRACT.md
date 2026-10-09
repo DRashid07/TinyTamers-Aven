@@ -1,5 +1,6 @@
-# sign-assistant CONTRACT (v1)
+# sign-assistant CONTRACT (v2)
 Change this file only after telling the whole team.
+v2 (task P1): AzSLD has no signer IDs, so data is split by `group`; AzSLD Words clips are used whole (no segment_offline).
 
 ## Ownership (one owner per file, so parallel work never conflicts)
 | Owner | Files |
@@ -25,8 +26,10 @@ sign-assistant/
 Python 3.11. Run every command from sign-assistant/ (python -m pose.extract_dataset ...).
 
 ## data/index.csv (written by data/inspect_dataset.py)
-video_id,video_path,dataset_label,signer_id,camera,n_frames,fps
+video_id,video_path,dataset_label,signer_id,camera,n_frames,fps,group
 camera is one of front, side, unknown. signer_id is empty if unknown.
+group is the split unit: the signer_id when known (team recordings: team_<signer_id>); for AzSLD Words clips
+rec_<YYYY-MM-DD>, the date of the Sentences recording the clip was cut from (a proxy, not a signer); empty if unknown.
 
 ## data/vocab.json
 [{"id": "hekim", "gloss": "HƏKİM", "az": "həkim", "dataset_label": "<exact class name in the dataset>"}]
@@ -34,8 +37,9 @@ camera is one of front, side, unknown. signer_id is empty if unknown.
 - Copy gloss/az text as written. Never build it with .upper()/.lower() (Azerbaijani i/İ and ı/I).
 
 ## data/splits.json
-{"seed": 13, "train": [signer_ids], "val": [signer_ids], "test": [signer_ids], "note": "..."}
-Split by signer, never by video. The test split is read only by `python -m eval.evaluate --split test --final`.
+{"seed": 13, "train": [groups], "val": [groups], "test": [groups], "note": "..."}
+Split by group, never by video. AzSLD groups go to train/val; test is the team recordings (team_* groups), the only
+signer-independent test. Videos with an empty group are train-only. The test split is read only by `python -m eval.evaluate --split test --final`.
 
 ## Frame format (browser -> server; extraction produces the same shape)
 Header, once per session: {"type": "start", "w": <video width px>, "h": <video height px>}
@@ -69,7 +73,8 @@ Start after start_frames (3) consecutive up frames. End after end_frames (6) con
 Valid if min_ms (300) <= duration <= max_ms (4000); otherwise status too_short / too_long.
 class Segmenter(w, h, cfg).push(frame_dict) -> None | {"event": "start"} | {"event": "end", "frames": [...], "status": "ok" | "too_short" | "too_long"}
 segment_offline(pose, hands, t, w, h, cfg) -> (start_idx, end_idx) or None (first start to last end)
-Training clips are cut with segment_offline so training input matches live input.
+Team recordings are cut with segment_offline so they match live input. AzSLD Words clips are already cut to the
+sign (often under 1 s, no rest pose) and are used whole.
 
 ## Model artifacts (model/artifacts/)
 model.pt (state_dict) and config.json:
