@@ -1,44 +1,157 @@
-/* Owner: B (Frontend). Large type and high contrast: index.html must read on a 1280x720 projector.
-   signs.html shares the base rules; the Direction A layout lives under .app. */
+/* Owner: B (Frontend). Shared by index.html (Direction A) and signs.html (Direction B).
+   Mobile first, calm colours (no pure white glare), automatic dark mode, touch targets of at least 48 px.
+   From 900 px wide the Direction A page switches to two columns with large type for a 1280x720 projector. */
+
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --text: #1c2128;
+  --muted: #586374;
+  --border: #d5dbe2;
+  --accent: #2457c5;
+  --accent-text: #ffffff;
+  --ok: #1d7044;
+  --ok-bg: #e3f3ea;
+  --warn: #7a4b00;
+  --warn-bg: #fff3d6;
+  --warn-line: #e0a106;
+  --bad: #b3261e;
+  --bad-bg: #fdecea;
+  --chip: #eef1f5;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 1px 8px rgb(16 24 40 / 5%);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121519;
+    --surface: #1b1f25;
+    --text: #e7eaee;
+    --muted: #a2acb9;
+    --border: #2e353e;
+    --accent: #6f9cff;
+    --accent-text: #0d1320;
+    --ok: #6fd39c;
+    --ok-bg: #173225;
+    --warn: #ffd27a;
+    --warn-bg: #33280f;
+    --warn-line: #b98a1d;
+    --bad: #ff8a80;
+    --bad-bg: #3a1c1b;
+    --chip: #252b33;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
 body {
-  font-family: system-ui, sans-serif;
   margin: 0;
-  background: #fff;
-  color: #111;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
 }
 
 main {
   max-width: 680px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 12px 16px 24px;
 }
 
-a { color: #0b4fb3; }
+h1 { margin: 0.4rem 0 0.8rem; font-size: 1.5rem; line-height: 1.25; }
+h2 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+a { color: var(--accent); }
 
+/* Disclaimer: always visible, calm amber instead of loud yellow, compact on phones */
 .banner {
   position: sticky;
   top: 0;
-  z-index: 2;
-  padding: 0.45rem 1rem;
-  background: #ffd23f;
-  color: #111;
-  border-bottom: 2px solid #8a6d00;
-  font-size: 1.1rem;
-  font-weight: 700;
+  z-index: 3;
+  padding: 8px 16px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-bottom: 1px solid var(--warn-line);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.35;
   text-align: center;
 }
 
-.status { font-size: 0.95rem; }
-.ok { color: #1b5e20; }
-.bad { color: #b3261e; }
-.note { font-size: 0.85rem; color: #444; }
+.topnav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px 16px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px 16px 0;
+}
 
-/* Only the preview is mirrored; MediaPipe always gets the unmirrored video. */
+.topnav a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+
+.status { font-size: 0.95rem; color: var(--muted); }
+.ok { color: var(--ok); }
+.bad { color: var(--bad); }
+.note { font-size: 0.9rem; color: var(--muted); }
+
+/* Buttons and form controls (both pages) */
+button, select, textarea, input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button.primary, #show {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+button:disabled { opacity: 0.45; cursor: default; }
+button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+select, input, textarea {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+/* Camera preview: only the preview is mirrored; MediaPipe always gets the unmirrored video. */
 .stage {
   position: relative;
+  overflow: hidden;
   transform: scaleX(-1);
   background: #000;
   aspect-ratio: 4 / 3;
+  margin: 0 auto;
+  border-radius: var(--radius);
+}
+
+/* Phone held sideways: a smaller preview keeps the status and buttons on screen */
+@media (max-height: 520px) {
+  .stage { width: min(100%, calc(60vh * 4 / 3)); }
 }
 
 .stage video,
@@ -49,103 +162,174 @@ a { color: #0b4fb3; }
   height: 100%;
 }
 
-/* Direction A (index.html) */
+/* Direction A (index.html): one column on phones */
 .app {
-  max-width: 1240px;
   display: grid;
-  grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
-  gap: 1.5rem;
-  padding: 0.6rem 1rem;
-  font-size: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1240px;
 }
 
-.app h2 { margin: 0 0 0.4rem; font-size: 1.3rem; }
-.app .note { margin: 0.4rem 0; }
+.app > section { min-width: 0; }
+.app .note { margin: 0.5rem 0; }
 
-.app button {
-  min-height: 2.6rem;
-  padding: 0.3rem 1rem;
-  border: 2px solid #111;
-  border-radius: 0.5rem;
-  background: #fff;
-  color: #111;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.app button.primary { background: #0b4fb3; border-color: #0b4fb3; color: #fff; }
-.app button:disabled { opacity: 0.4; cursor: default; }
-.app button:focus-visible { outline: 3px solid #ffb300; outline-offset: 2px; }
-
+/* Status pill: the one place to look; big, calm colours */
 .pill {
-  margin-bottom: 0.6rem;
-  padding: 0.45rem 1rem;
+  margin-bottom: 10px;
+  padding: 10px 16px;
   border-radius: 999px;
-  font-size: 1.6rem;
+  font-size: 1.25rem;
   font-weight: 700;
+  line-height: 1.3;
   text-align: center;
 }
 
-.pill small { margin-left: 0.6rem; font-size: 1rem; font-weight: 400; }
-.pill.wait, .pill.idle { background: #e6e6e6; color: #111; }
-.pill.signing { background: #0b4fb3; color: #fff; }
-.pill.ok { background: #1b5e20; color: #fff; }
-.pill.abstain { background: #ffb300; color: #111; font-size: 1.35rem; }
-.pill.offline { background: #b3261e; color: #fff; }
+.pill small { margin-left: 0.5rem; font-size: 0.85rem; font-weight: 500; }
+.pill.wait, .pill.idle { background: var(--chip); color: var(--text); }
+.pill.signing { background: var(--accent); color: var(--accent-text); }
+.pill.ok { background: var(--ok-bg); color: var(--ok); border: 2px solid var(--ok); }
+.pill.abstain { background: var(--warn-bg); color: var(--warn); border: 2px solid var(--warn-line); font-size: 1.1rem; }
+.pill.offline { background: var(--bad-bg); color: var(--bad); border: 2px solid var(--bad); }
 
+/* Recognised words */
 .word-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  min-height: 2.8rem;
+  gap: 8px;
+  min-height: 48px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .word-chips li {
-  padding: 0.25rem 0.9rem;
-  border: 2px solid #111;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #f0f0f0;
+  background: var(--surface);
   font-weight: 700;
+  box-shadow: var(--shadow);
 }
 
-.buttons { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.6rem 0 0.9rem; }
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
 
-.sentence-panel { border-top: 2px solid #111; padding-top: 0.6rem; }
-.sentence { margin: 0 0 0.4rem; font-size: 2rem; font-weight: 700; line-height: 1.25; }
-.glosses { margin: 0 0 0.3rem; font-size: 1.05rem; }
-.assumptions { margin: 0 0 0.4rem; padding-left: 1.2rem; font-size: 0.95rem; color: #333; }
+.buttons .primary { grid-column: 1 / -1; order: -1; }
+
+/* Composed sentence: a quiet card */
+.sentence-panel {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.sentence { margin: 0 0 8px; font-size: 1.6rem; font-weight: 700; line-height: 1.3; }
+.glosses { margin: 0 0 6px; font-size: 1rem; color: var(--muted); }
+.assumptions { margin: 0 0 8px; padding-left: 1.2rem; font-size: 0.95rem; color: var(--muted); }
 
 .warn-note {
-  margin: 0 0 0.5rem;
-  padding: 0.3rem 0.6rem;
-  border-left: 4px solid #ffb300;
-  background: #fff3cd;
-  font-size: 1rem;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border-left: 4px solid var(--warn-line);
+  border-radius: 6px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-size: 0.95rem;
 }
+
+#speak { width: 100%; }
 
 footer {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 1rem 0.6rem;
-  font-size: 0.9rem;
-  color: #333;
+  padding: 8px 16px 24px;
+  font-size: 0.88rem;
+  color: var(--muted);
 }
 
-footer p { margin: 0.2rem 0; }
+footer p { margin: 4px 0; }
+footer details { margin-top: 8px; }
+footer summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
 
 .record {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  gap: 10px 14px;
   align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
-.record input:invalid { border-color: #b3261e; }
+.record input:invalid { border-color: var(--bad); }
 
-@media (max-width: 900px) {
-  .app { grid-template-columns: 1fr; }
+/* Direction B (signs.html) */
+.signs label[for="text"] { display: block; margin-bottom: 6px; font-weight: 600; }
+.signs textarea { width: 100%; resize: vertical; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.controls #show { flex: 1 1 140px; }
+.controls #status { flex-basis: 100%; }
+
+.player {
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+}
+
+.player video { display: block; width: 100%; height: 100%; }
+
+.subtitle {
+  min-height: 1.6em;
+  margin: 10px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; }
+
+.chip {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.chip.current { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.chip.oov { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+.chip.missing { border-style: dashed; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+
+/* Laptop and projector: two columns, large type */
+@media (min-width: 900px) {
+  .banner { font-size: 1.05rem; }
+  .app {
+    grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+    gap: 24px;
+    padding: 12px 16px;
+    font-size: 1.2rem;
+  }
+  .pill { font-size: 1.55rem; }
+  .pill.abstain { font-size: 1.35rem; }
+  .sentence { font-size: 2rem; }
+  .buttons { display: flex; flex-wrap: wrap; }
+  .buttons .primary { order: 0; }
+  #speak { width: auto; }
 }
