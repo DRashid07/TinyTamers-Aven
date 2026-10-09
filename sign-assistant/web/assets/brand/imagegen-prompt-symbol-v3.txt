@@ -1,0 +1,19 @@
+# Owner: Codex (Brand/logo assets).
+# Generator: built-in image_gen.imagegen; transparent_background=true.
+# Edit target: azsl-assistant-symbol-v2.png.
+
+Use case: logo-brand
+Asset type: revised premium standalone symbol for AzSL Assistant, genuine transparent PNG.
+Input image: Image 1 is the EDIT TARGET: the user's chosen simple deep-violet text-free hand/communication logo. Keep the existing identity recognizable. This is a measured design revision, not a complete change of concept.
+Primary request: Slightly redesign the violet mark to make its geometry more distinctive while preserving its premium, minimal character. It must still suggest a human signing gesture and communication. The user specifically selected the SIMPLE VIOLET version.
+Retain: the overall gesturing-hand silhouette, three rising finger-like lobes, flowing thumb and palm, optical balance, deep violet family, and absolutely no text.
+Make these specific visible changes:
+1. Rework the plain horizontal oval palm aperture into a graceful DIAGONALLY TILTED ALMOND / TEARDROP negative-space opening. Its upper-left end should taper into one clean narrow diagonal slit opening between the thumb arc and finger base, creating a deliberate open connection rather than a closed circular hand-and-chat ring. Keep the void generous and legible.
+2. Move the speech-bubble tail from its old lower-left position to the LOWER-RIGHT edge. Make it shorter, elegantly tapered and subtly angled, integrated into the palm curve rather than a long hook.
+3. Refine the three finger-like lobes: slightly slimmer stems, carefully graduated heights, softly rounded but more restrained terminals, and more deliberate spacing. Preserve their familiar sweep and direction.
+Visual ambition: a bespoke, quietly confident premium technology identity. Exquisite smooth curves, clean width transitions, minimal detail and a compact silhouette. It should look purposefully drawn and polished at both presentation scale and small icon size.
+Color palette: ONE solid deep royal violet close to #60269E. No multicolored gradients or decorative fold bands. Filled shapes fully opaque; the background, diagonal slit and palm opening transparent.
+Composition: a single centered mark on square transparent canvas. Mark occupies about 70 percent of the canvas height, with generous even safe margins.
+Text: ABSOLUTELY NONE. No letters, words, initials, monogram, numerals, labels, signature or slogan.
+Constraints: preserve the gesture concept without representing a specific sign-language word. Original revision, no reproduction of any competitor's identity. Flat two-dimensional vector-like finish. No 3D, gloss, glow, shadow, bevel, metallic materials, jewelry styling, extra icons, app tile, background, border, badge, watermark, checkerboard artwork or presentation sheet. Deliver only the finished symbol.
+

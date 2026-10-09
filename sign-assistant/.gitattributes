@@ -1,0 +1,2 @@
+# Shell scripts keep LF line endings, also when uploaded from Windows (railway up).
+*.sh text eol=lf

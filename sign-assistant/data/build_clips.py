@@ -2,6 +2,8 @@
 
 Owner: D (Direction B/Speech/Eval). Run from sign-assistant/ (AzSLD rows have camera "unknown"):
     python -m data.build_clips --camera any
+For the complete text-to-sign playback vocabulary, keeping existing clips and their provenance:
+    python -m data.build_clips --camera any --vocab-file data/playback_vocab.json --skip-existing
 For each vocab id it picks ONE video from a TRAIN group of data/splits.json (never val or test). With
 landmarks it prefers a found segment (pose.segment.segment_offline), then a high hand_ratio and
 valid_ratio, then a duration close to the class median ("checked": true). Without landmarks it takes the
@@ -88,24 +90,39 @@ def main(argv=None):
     p = argparse.ArgumentParser(description="One reference clip per vocab sign.")
     p.add_argument("--camera", default="front", help="front, side, unknown or any (AzSLD: any)")
     p.add_argument("--data-dir", type=Path, default=DATA)
+    p.add_argument("--vocab-file", type=Path,
+                   help="vocabulary JSON; defaults to <data-dir>/vocab.json (recognition vocabulary)")
+    p.add_argument("--skip-existing", action="store_true",
+                   help="keep nonempty clips already recorded in clips_index.json; generate missing clips only")
     p.add_argument("--ffmpeg", default=shutil.which("ffmpeg"), help="path to ffmpeg")
     a = p.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    if not a.ffmpeg:
+    vocab_path = a.vocab_file or a.data_dir / "vocab.json"
+    vocab = json.loads(vocab_path.read_text(encoding="utf-8"))
+    clips_dir = a.data_dir / "clips"
+    index_path = a.data_dir / "clips_index.json"
+    index = (json.loads(index_path.read_text(encoding="utf-8"))
+             if a.skip_existing and index_path.exists() else {})
+    existing = {v["id"] for v in vocab
+                if isinstance(index.get(v["id"]), dict) and (clips_dir / f"{v['id']}.mp4").is_file()
+                and (clips_dir / f"{v['id']}.mp4").stat().st_size > 0}
+    if not a.ffmpeg and len(existing) != len(vocab):
         sys.exit("ffmpeg not found: install it or pass --ffmpeg. Nothing written.")
 
-    vocab = json.loads((a.data_dir / "vocab.json").read_text(encoding="utf-8"))
     splits = json.loads((a.data_dir / "splits.json").read_text(encoding="utf-8"))
     with open(a.data_dir / "index.csv", encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
     candidates = train_candidates(rows, vocab, splits, a.camera)
     cfg = load_config()
-    clips_dir = a.data_dir / "clips"
     clips_dir.mkdir(parents=True, exist_ok=True)
 
-    index, missing = {}, []
+    missing = []
     for v in vocab:
+        if v["id"] in existing:
+            print(f"{v['id']:12s} {v['gloss']:12s} kept existing clip and source metadata")
+            continue
+        index.pop(v["id"], None)
         rows_v = candidates.get(v["id"], [])
         if not rows_v:
             missing.append((v["id"], f"no {a.camera}-camera video in a train group"))
@@ -123,9 +140,8 @@ def main(argv=None):
         print(f"{v['id']:12s} {v['gloss']:12s} {row['video_id']}  {start:5.0f}-{end:5.0f} ms  "
               f"{quality}  checked={checked}  ({len(rows_v)} train candidates)")
 
-    (a.data_dir / "clips_index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n",
-                                                 encoding="utf-8")
-    print(f"\n{len(index)}/{len(vocab)} clips in {clips_dir}; clips_index.json written.")
+    index_path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"\n{sum(v['id'] in index for v in vocab)}/{len(vocab)} clips in {clips_dir}; clips_index.json written.")
     print("ids without a usable clip: " + (", ".join(f"{i} ({why})" for i, why in missing) if missing else "none"))
 
 

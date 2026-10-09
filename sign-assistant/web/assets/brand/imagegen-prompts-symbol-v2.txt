@@ -1,0 +1,27 @@
+# Owner: Codex (Brand/logo assets).
+# Generator: built-in image_gen.imagegen; transparent_background=true.
+# First edit: exploration; second edit: selected final.
+
+=== EDIT 1: TEXT-FREE EXPLORATION ===
+Use case: logo-brand
+Asset type: final standalone text-free premium brand symbol, transparent PNG, square canvas.
+Input image: Image 1 is the previous logo, an EDIT TARGET and concept reference. The user wants its lettering removed and its emblem redesigned to feel more premium. Preserve the human-gesture and communication concept and violet brand family; the precise contour may be refined substantially.
+Primary request: Redesign this into ONE exceptional, compact, elegantly crafted standalone logomark for an Azerbaijani sign-language communication assistant, visually compatible with contemporary Azercell branding. Remove ALL lettering: no AzSL, no Assistant, no characters, no monogram, no slogan. Center only the improved symbol on a square transparent canvas.
+Design direction informed by luxury identity case studies: simplicity and digital clarity; a distinctive precise silhouette that holds up at small sizes; quiet confidence through optical balance, purposeful negative space and restrained color.
+Subject: A sophisticated abstract gesturing hand fused with a speech ribbon. Redraw the current bulky emblem into a more compact, poised and flowing silhouette: three gracefully rising finger-like extensions with carefully graduated lengths and subtly tapered rounded ends, a sweeping thumb/palm ribbon forming a large clean oval negative-space aperture, and one modest lower speech-tail finish. All parts should feel like ONE coherent custom-drawn gesture, not assembled clipart. Keep the open palm aperture large, curves exceptionally smooth and balanced, with clear separations between the finger-like lobes. Refine the width transitions and terminal angles with the precision of a bespoke designer symbol. The hand is abstract, not a particular sign-language word.
+Style/medium: minimal two-dimensional vector-like artwork, beautifully polished geometry. The premium quality must come from the silhouette and disciplined proportions. No photoreal hand or three-dimensional object. Remove the multiple bright overlapping bands and busy interior fold decorations of the old emblem.
+Color palette: deep royal violet #60269E moving very subtly into muted amethyst #8754B5; a single restrained, smooth tonal transition across the unified mark. Darkest edges remain rich violet. Avoid hot pink and bright magenta. Artwork is fully opaque inside the silhouette; only its background and inner aperture are transparent.
+Composition: square transparent canvas, emblem optically centered, around 70 percent of canvas height, generous equal safe margins. The image must contain only one symbol.
+Constraints: Absolutely NO TEXT OR LETTERS anywhere. No rectangular lockup space. No corporate logo reproduction. No frame, circular badge, app tile, extra orbit, sparkles, stars, shield, crown, metallic gold, chrome, bevel, shadow, bloom, glow, plastic shine, 3D rendering, background scene, presentation sheet, watermark or mockup. Transparent alpha, not a drawn checkerboard.
+
+=== EDIT 2: SELECTED FINAL REFINEMENT ===
+Use case: logo-brand
+Asset type: final text-free premium logomark, transparent PNG.
+Input image: Image 1 is the edit target, a violet hand-and-speech symbol. Keep this core symbolic identity, but apply the following one focused refinement: replace its decorative multiband surface with a perfectly clean single-color silhouette.
+Primary request: Create the refined final master emblem. Every filled part of the mark must be ONE UNIFORM SOLID DEEP VIOLET, exactly #60269E. Remove ALL gradients, shading, lighter ribbons, internal folding lines, overlaps and pink highlights. Keep the silhouette and the oval palm opening, with subtle optical cleanup of the curves so the transitions are extremely smooth and deliberate. The lower speech-tail is modest and gracefully tapered. The three fingers and palm flow together into one intentional flat shape.
+Premium art direction: restrained, precise and poised. A compact bespoke silhouette, open negative space and exquisite curve quality, comparable in finish to a professionally commissioned contemporary telecom identity. The open palm is transparent; there must be no speckles or leftover colored flecks inside it or outside the silhouette.
+Composition: one centered emblem on square transparent canvas. Emblem occupies about 70 percent of canvas height with equal optical padding around the entire mark. Avoid cropping.
+Color: the logo itself is fully opaque flat #60269E; ONLY smooth edge antialiasing may have partial alpha. All other pixels outside the silhouette and within the palm aperture must have zero alpha.
+Text: none at all. Absolutely no writing, initials, numbers, monograms or slogans.
+Constraints: TWO-DIMENSIONAL FLAT SHAPE. NO GRADIENTS. NO RIBBON FOLDS. No corporate trademark reproduction, chrome, gold, glass, 3D, embossing, mockup, photograph, shadow, glow, textured fill, badge, frame, app-tile background, additional objects or watermark. Deliver the one pure standalone symbol with genuine transparency.
+

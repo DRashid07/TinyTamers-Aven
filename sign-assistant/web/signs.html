@@ -73,6 +73,12 @@
       </div>
       <div class="card-b">
         <textarea id="text" rows="3" maxlength="300" placeholder="məs. Sabah Bakıya getmək istəyirəm"></textarea>
+        <div class="examples" role="group" aria-label="Nümunə cümlələr">
+          <span class="examples-label">Nümunələr:</span>
+          <button type="button" class="chip-btn" data-example="Salam, necəsiniz?">Salam, necəsiniz?</button>
+          <button type="button" class="chip-btn" data-example="Mən yaxşıyam.">Mən yaxşıyam.</button>
+          <button type="button" class="chip-btn" data-example="Sabah Bakıya getmək istəyirəm.">Sabah Bakıya getmək istəyirəm.</button>
+        </div>
         <div class="input-actions">
           <button id="mic" type="button" class="btn btn-ghost btn-lg btn-mic" hidden>
             <svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg>Danış</button>
@@ -82,6 +88,14 @@
         <p id="status" class="status" aria-live="polite"></p>
         <p id="mic-note" class="aside-note" hidden><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
           <span>Mikrofon: Chrome nitqi tanımaq üçün səsi Google serverinə göndərir.</span></p>
+        <div class="vocab">
+          <p class="aside-note"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg>
+            <span id="vocab-summary" aria-live="polite">İşarə lüğəti yüklənir…</span></p>
+          <details>
+            <summary>İşarəsi olan sözlərə bax<svg class="ic chev" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+            <p id="vocab-words" class="note">Yüklənir…</p>
+          </details>
+        </div>
       </div>
     </section>
 
@@ -104,6 +118,7 @@
         <p id="subtitle" class="subtitle" aria-live="polite"></p>
         <ol id="chips" class="chips" aria-label="İşarələrin ardıcıllığı"></ol>
         <div class="player-notes">
+          <p id="coverage" class="note" aria-live="polite"></p>
           <p id="source" class="note"></p>
           <p class="note">İşarələr mətndəki söz sırası ilə göstərilir; AzSL qrammatikası tətbiq olunmur.
             Qırmızı: lüğətdə işarəsi olmayan söz.</p>

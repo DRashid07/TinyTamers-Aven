@@ -98,6 +98,14 @@ def test_post_ok_and_unsegmented(client, monkeypatch):
     assert whole["id"] == "sen"
 
 
+def test_signer_too_close_to_the_camera_abstains(client, monkeypatch):
+    monkeypatch.setattr(routes_recognise, "PREDICTOR", FakePredictor([0.99, 0.01]))  # would say MƏN at 99%
+    near = sequence((10, {"zoom": 2.0}), (15, {**raise_both(), "zoom": 2.0}), (10, {"zoom": 2.0}))
+    assert client.post("/recognise", json={"w": W, "h": H, "frames": near, "segment": False}).json() == \
+        {"status": "abstain", "reason": "invalid_pose", "message": routes_recognise.abstain("x")["message"]}
+    assert client.post("/recognise", json={"w": W, "h": H, "frames": SIGN, "segment": False}).json()["id"] == "men"
+
+
 def test_latency_over_budget_is_a_warning(client, monkeypatch, caplog):
     monkeypatch.setattr(routes_recognise, "PREDICTOR", FakePredictor([0.9, 0.1]))
     monkeypatch.setattr(routes_recognise, "LATENCY_BUDGET_MS", -1)

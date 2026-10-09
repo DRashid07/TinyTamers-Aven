@@ -10,6 +10,20 @@ Licence and the attribution we must show: [reports/LICENSE_CHECK.md](reports/LIC
 
 We use only **AzSLD_Words_100**: 100 word classes, 7,248 short clips.
 
+`vocab.json` contains the 40 trained recognition classes, in model class order. Text-to-sign playback uses
+`playback_vocab.json`, which includes all 100 word classes and keeps those 40 entries intact. The smaller training
+set's minimum-video threshold is not a requirement for showing a genuine reference clip.
+
+After building the index and group splits, generate the additional playback clips with:
+
+```bash
+python -m data.build_clips --camera any --vocab-file data/playback_vocab.json --skip-existing
+```
+
+Pass `--ffmpeg <path>` if ffmpeg is not on PATH. `--skip-existing` preserves nonempty clips with existing source
+metadata in `clips_index.json`. New clips use train-group sources only; `checked: false` means no landmark quality
+check was available. Ship the full `data/clips/` directory with the app; the videos remain gitignored.
+
 | Zenodo file | size | needed |
 |---|---|---|
 | AzSLD_Words_100.zip | 1.11 GB | yes |

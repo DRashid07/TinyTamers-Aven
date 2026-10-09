@@ -1,24 +1,23 @@
 """POST /text-to-signs: Azerbaijani text -> sequence of sign clips and out-of-vocabulary words.
 
 Owner: D (Direction B/Speech/Eval). See CONTRACT.md "API" and "LLM".
-The LLM maps words to vocab ids; the server checks every item again (an id outside the vocabulary
-becomes oov). Without a usable LLM answer a deterministic prefix match is used (source "fallback").
+Known words and inflections use deterministic matches from the playback vocabulary. The LLM only
+resolves unmatched spans; the server checks every returned id against the same vocabulary.
 A sign whose clip file is missing gets "clip_missing": true instead of "clip".
 """
 import json
-import re
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from api.llm_client import structured_call
+from api.sign_matching import az_lower, from_fallback
 
 ROOT = Path(__file__).resolve().parent.parent
-VOCAB_PATH = ROOT / "data" / "vocab.json"
+VOCAB_PATH = ROOT / "data" / "playback_vocab.json"
 CLIPS_DIR = ROOT / "data" / "clips"
 MAX_CHARS = 300
-MIN_PREFIX = 3  # an az form shorter than this must match a token exactly
 
 TEXT_TO_SIGNS_SYSTEM_PROMPT = """\
 You map Azerbaijani text to a sequence of signs from a FIXED Azerbaijani Sign Language vocabulary. A hearing \
@@ -60,11 +59,6 @@ def load_vocab():
     return json.loads(VOCAB_PATH.read_text(encoding="utf-8"))
 
 
-def az_lower(text):
-    """Lowercase with Azerbaijani rules: İ -> i and I -> ı (str.lower() gives i + a dot, and i)."""
-    return text.replace("İ", "i").replace("I", "ı").lower()
-
-
 def system_prompt(vocab):
     lines = "\n".join(f"{v['id']} - {v['az']}" for v in vocab)
     return TEXT_TO_SIGNS_SYSTEM_PROMPT.replace("{vocab_lines}", lines)  # .format() would trip on the JSON braces
@@ -86,12 +80,10 @@ def schema(ids):
     }
 
 
-def from_llm(text, vocab):
-    """[(kind, id or word)] from the LLM, or None (no LLM, error, malformed or empty answer).
-    An id outside the vocabulary becomes oov with the id as the word."""
+def validate_answer(answer, vocab):
+    """Validate an LLM sequence; an id outside the vocabulary becomes an OOV word."""
     ids = [v["id"] for v in vocab]
-    answer = structured_call(system_prompt(vocab), f"Text: {text}", schema(ids))
-    if answer is None or not isinstance(answer.get("sequence"), list):
+    if not isinstance(answer, dict) or not isinstance(answer.get("sequence"), list):
         return None
     items = []
     for item in answer["sequence"]:
@@ -105,28 +97,60 @@ def from_llm(text, vocab):
     return items or None
 
 
-def from_fallback(text, vocab):
-    """Deterministic match: each token goes to the vocab entry whose az form is the longest prefix of it
-    (at least MIN_PREFIX letters; shorter forms such as "ev" must match exactly). A multi-word form
-    ("bu gün") matches a run of tokens. Everything else is oov, written as typed."""
-    tokens = re.findall(r"[^\W_]+", text)  # splits on spaces and punctuation
-    lowered = [az_lower(t) for t in tokens]
-    forms = sorted(((az_lower(v["az"]).split(), v["id"]) for v in vocab), key=lambda f: -len(" ".join(f[0])))
-    items, i = [], 0
-    while i < len(tokens):
-        for words, vocab_id in forms:
-            last = i + len(words) - 1
-            if last >= len(tokens) or lowered[i:last] != words[:-1]:
-                continue
-            if lowered[last] == words[-1] or (len(" ".join(words)) >= MIN_PREFIX
-                                              and lowered[last].startswith(words[-1])):
-                items.append(("sign", vocab_id))
-                i = last + 1
-                break
-        else:
-            items.append(("oov", tokens[i]))
+def from_llm(text, vocab):
+    """Resolve an unmatched text span, or return None on an unusable LLM answer."""
+    answer = structured_call(system_prompt(vocab), f"Text: {text}", schema([v["id"] for v in vocab]))
+    return validate_answer(answer, vocab)
+
+
+def resolve_unknown(items, vocab):
+    """Keep known matches in order; resolve all unmatched spans with at most one LLM request."""
+    spans, i = [], 0
+    while i < len(items):
+        if items[i][0] != "oov":
             i += 1
-    return items
+            continue
+        start = i
+        while i < len(items) and items[i][0] == "oov":
+            i += 1
+        spans.append((start, i, " ".join(word for _, word in items[start:i])))
+    if not spans:
+        return items, "fallback"
+    if len(spans) == 1:
+        replacements = [from_llm(spans[0][2], vocab)]
+    else:
+        batch_schema = {"type": "object", "properties": {"sequences": {
+            "type": "array", "items": schema([v["id"] for v in vocab])}},
+            "required": ["sequences"], "additionalProperties": False}
+        user = ("Resolve these unmatched text spans independently, in the given order. Return one "
+                "sequence per span in the sequences array. Do not combine spans.\nText spans: "
+                + json.dumps([span[2] for span in spans], ensure_ascii=False))
+        answer = structured_call(system_prompt(vocab), user, batch_schema)
+        sequences = answer.get("sequences") if isinstance(answer, dict) else None
+        if not isinstance(sequences, list) or len(sequences) != len(spans):
+            return items, "fallback"
+        replacements = [validate_answer(sequence, vocab) for sequence in sequences]
+    out, start, used_llm = [], 0, False
+    for (left, right, _), replacement in zip(spans, replacements):
+        out.extend(items[start:left])
+        out.extend(replacement if replacement is not None else items[left:right])
+        used_llm |= replacement is not None
+        start = right
+    out.extend(items[start:])
+    return out, "llm" if used_llm else "fallback"
+
+
+def clip_fields(vocab_id):
+    path = CLIPS_DIR / f"{vocab_id}.mp4"
+    if path.is_file() and path.stat().st_size:
+        return {"clip": f"/clips/{vocab_id}.mp4"}
+    return {"clip_missing": True}
+
+
+@router.get("/sign-vocab")
+def sign_vocab():
+    """The full playback vocabulary and available clips; /vocab remains the recognition classes."""
+    return [{**entry, **clip_fields(entry["id"])} for entry in load_vocab()]
 
 
 def to_sequence(items, vocab):
@@ -136,10 +160,8 @@ def to_sequence(items, vocab):
     for kind, value in items:
         if kind == "oov":
             sequence.append({"kind": "oov", "word": value})
-        elif (CLIPS_DIR / f"{value}.mp4").exists():
-            sequence.append({"kind": "sign", "id": value, "gloss": gloss[value], "clip": f"/clips/{value}.mp4"})
         else:
-            sequence.append({"kind": "sign", "id": value, "gloss": gloss[value], "clip_missing": True})
+            sequence.append({"kind": "sign", "id": value, "gloss": gloss[value], **clip_fields(value)})
     return sequence
 
 
@@ -150,8 +172,5 @@ def text_to_signs(body: TextRequest):
     if not text or len(body.text) > MAX_CHARS:
         raise HTTPException(400, f"send 1 to {MAX_CHARS} characters")
     vocab = load_vocab()
-    items = from_llm(text, vocab)
-    source = "llm"
-    if items is None:
-        items, source = from_fallback(text, vocab), "fallback"
+    items, source = resolve_unknown(from_fallback(text, vocab), vocab)
     return {"sequence": to_sequence(items, vocab), "source": source}
