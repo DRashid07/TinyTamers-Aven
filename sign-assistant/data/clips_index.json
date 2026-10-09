@@ -1,1 +1,282 @@
-{}
+{
+ "men": {
+  "source_video_id": "ff9fe7151e474a2882f62eba152799e1",
+  "signer_id": "rec_2022-12-27",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "sen": {
+  "source_video_id": "d8548cabd180449fb4fa2f2bf27fe1f5",
+  "signer_id": "rec_2022-06-13",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "getmek": {
+  "source_video_id": "abe5e9bb01564c5d926d12564fb3a5b8",
+  "signer_id": "rec_2022-07-23",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "istemek": {
+  "source_video_id": "e89fd40ca9fc441c83a3d2ba891476e5",
+  "signer_id": "rec_2022-07-25",
+  "start_ms": 0,
+  "end_ms": 967,
+  "checked": true
+ },
+ "sabah": {
+  "source_video_id": "3cc274cb68ee49d8bf099d294a298e33",
+  "signer_id": "rec_2022-06-13",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": true
+ },
+ "bu_gun": {
+  "source_video_id": "73b2297be6d64864ba25508003d0f55a",
+  "signer_id": "rec_2022-06-11",
+  "start_ms": 0,
+  "end_ms": 1033,
+  "checked": true
+ },
+ "sened": {
+  "source_video_id": "fa533e78e7424d7f990ec78cd604e800",
+  "signer_id": "rec_2022-07-22",
+  "start_ms": 0,
+  "end_ms": 767,
+  "checked": true
+ },
+ "siz": {
+  "source_video_id": "fe9ac1983f53480ba8d440ab313ff309",
+  "signer_id": "rec_2022-07-15",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": true
+ },
+ "bu": {
+  "source_video_id": "d024f04410214658946414921c149143",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": true
+ },
+ "o": {
+  "source_video_id": "f728fbf3e83b4123ba59fea14f65295e",
+  "signer_id": "rec_2022-12-27",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "menim": {
+  "source_video_id": "f45837e8cbdc4363bdc6a0d009569eff",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "biz": {
+  "source_video_id": "db61e98d85a348f4aed5bce137babfba",
+  "signer_id": "rec_2022-12-16",
+  "start_ms": 0,
+  "end_ms": 1133,
+  "checked": true
+ },
+ "onun": {
+  "source_video_id": "e3053ba5bbd34ec3bc242bc1fd1c52f9",
+  "signer_id": "rec_2022-10-28",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": true
+ },
+ "elil": {
+  "source_video_id": "2d032fa21be44bffbfc13d4da3d4d2e6",
+  "signer_id": "rec_2022-11-17",
+  "start_ms": 0,
+  "end_ms": 1067,
+  "checked": true
+ },
+ "var": {
+  "source_video_id": "e630985733a74ae39316a58e90d324b6",
+  "signer_id": "rec_2022-05-26",
+  "start_ms": 0,
+  "end_ms": 833,
+  "checked": true
+ },
+ "burda": {
+  "source_video_id": "b0a2482f099e48abb6843ec0de453d04",
+  "signer_id": "rec_2022-12-17",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": true
+ },
+ "ev": {
+  "source_video_id": "c587f8ad629f4587915f0d394ba30b8c",
+  "signer_id": "rec_2022-06-11",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "usaq": {
+  "source_video_id": "cedaef84b1144d50ade86167980cc6d3",
+  "signer_id": "rec_2022-11-17",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": true
+ },
+ "hansi": {
+  "source_video_id": "f62373d779fc468b86eac3f2faf563a8",
+  "signer_id": "rec_2022-07-25",
+  "start_ms": 0,
+  "end_ms": 767,
+  "checked": true
+ },
+ "pensiya": {
+  "source_video_id": "de00e46fcd894e5d9832992bc53497c7",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": true
+ },
+ "baki": {
+  "source_video_id": "efb0d892d71541d987f43241a81f3bc6",
+  "signer_id": "rec_2022-11-17",
+  "start_ms": 0,
+  "end_ms": 767,
+  "checked": true
+ },
+ "d": {
+  "source_video_id": "d882d4f7922c44a0852398c31519e9d7",
+  "signer_id": "rec_2022-12-28",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "saglam": {
+  "source_video_id": "a75631abd36f4c88b4dd8f6a0475f629",
+  "signer_id": "rec_2023-01-19",
+  "start_ms": 0,
+  "end_ms": 900,
+  "checked": true
+ },
+ "biler": {
+  "source_video_id": "9eab4da745294296aac54a054afbbf0a",
+  "signer_id": "rec_2022-05-26",
+  "start_ms": 0,
+  "end_ms": 933,
+  "checked": true
+ },
+ "futbol": {
+  "source_video_id": "369c09813e2544678949a6ea6ffa87c9",
+  "signer_id": "rec_2022-06-09",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": true
+ },
+ "mene": {
+  "source_video_id": "aed64e0102364efb8c2820335bc94e12",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "almaq": {
+  "source_video_id": "b07195df81e7479e889f010b4a90c9a8",
+  "signer_id": "rec_2022-11-18",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": true
+ },
+ "etibarname": {
+  "source_video_id": "7f3d13074500445b9e65278961d556c5",
+  "signer_id": "rec_2022-12-28",
+  "start_ms": 0,
+  "end_ms": 1567,
+  "checked": true
+ },
+ "yox": {
+  "source_video_id": "5953715fc0e24dc1a768d9d33ef4fecb",
+  "signer_id": "rec_2022-07-20",
+  "start_ms": 0,
+  "end_ms": 800,
+  "checked": true
+ },
+ "bilmir": {
+  "source_video_id": "eecc484b99cb464aa67b603f46904e7e",
+  "signer_id": "rec_2022-06-01",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": true
+ },
+ "olmaq": {
+  "source_video_id": "cb98485761594c42a56043049ba79f77",
+  "signer_id": "rec_2022-07-02",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": true
+ },
+ "telefon": {
+  "source_video_id": "b0b351c01cf647b79766c2a4458d6108",
+  "signer_id": "rec_2022-07-18",
+  "start_ms": 0,
+  "end_ms": 600,
+  "checked": true
+ },
+ "dunen": {
+  "source_video_id": "f363c755791640619d75f3fd31230f68",
+  "signer_id": "rec_2022-08-01",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "is": {
+  "source_video_id": "deeda6549e5e4290abba1469be0ece56",
+  "signer_id": "rec_2022-06-02",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": true
+ },
+ "viza": {
+  "source_video_id": "9c36f864d48d4ae3b38b53c7d32bb6c2",
+  "signer_id": "rec_2022-12-17",
+  "start_ms": 0,
+  "end_ms": 833,
+  "checked": true
+ },
+ "orda": {
+  "source_video_id": "e64684033b5243e3815cb90b7457131e",
+  "signer_id": "rec_2022-12-28",
+  "start_ms": 0,
+  "end_ms": 767,
+  "checked": true
+ },
+ "azerbaycan": {
+  "source_video_id": "da3983f86a1a4b649ad52a25f4e69127",
+  "signer_id": "rec_2022-07-15",
+  "start_ms": 0,
+  "end_ms": 800,
+  "checked": true
+ },
+ "harda": {
+  "source_video_id": "1ae31e57fdf74218a70082b13901d2ee",
+  "signer_id": "rec_2022-07-19",
+  "start_ms": 0,
+  "end_ms": 800,
+  "checked": true
+ },
+ "yemek": {
+  "source_video_id": "36802b2aee3f4c3ead07959293578fbc",
+  "signer_id": "rec_2022-07-18",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ },
+ "ana": {
+  "source_video_id": "e429ba5ecd394adab5a03327d50bb565",
+  "signer_id": "rec_2022-07-18",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": true
+ }
+}

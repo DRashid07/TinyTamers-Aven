@@ -1,15 +1,69 @@
 <!doctype html>
-<!-- Owner: B (Frontend). Placeholder page. -->
+<!-- Owner: B (Frontend). Direction A: webcam landmarks -> /ws/recognise -> word buffer -> /compose-sentence. -->
 <html lang="az">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AzSL Assistant</title>
+  <title>AzSL köməkçisi</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>AzSL Assistant</h1>
-  <p>Assistive prototype, not a validated translator. Under construction.</p>
-  <script src="app.js"></script>
+  <div class="banner" role="note">Köməkçi prototip. Təsdiqlənmiş tərcümə deyil.
+    Tibbi və hüquqi qərarlar üçün surdotərcüməçiyə müraciət edin.</div>
+
+  <main class="app">
+    <section aria-label="Kamera">
+      <div id="pill" class="pill wait" role="status" aria-live="polite">Hazırlanır…</div>
+      <div class="stage">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+      </div>
+      <p class="note">Kamera görüntüsü brauzerdən çıxmır: serverə yalnız nöqtə koordinatları göndərilir.</p>
+    </section>
+
+    <section aria-label="Sözlər və cümlə">
+      <h2>Sözlər</h2>
+      <ol id="buffer" class="word-chips" aria-live="polite"></ol>
+      <p id="buffer-note" class="note">Tanınan sözlər burada görünəcək.</p>
+      <div class="buttons">
+        <button id="undo" type="button" disabled>Son sözü sil</button>
+        <button id="clear" type="button" disabled>Təmizlə</button>
+        <button id="compose" type="button" class="primary" disabled>Cümlə qur</button>
+      </div>
+
+      <div id="sentence-panel" class="sentence-panel" hidden>
+        <p id="sentence" class="sentence"></p>
+        <p id="glosses" class="glosses"></p>
+        <ul id="assumptions" class="assumptions"></ul>
+        <p id="fallback-note" class="warn-note" hidden>Cümlə avtomatik qurulmadı, sözlər göstərilir</p>
+        <button id="speak" type="button">Səsləndir</button>
+        <span id="speak-status" class="note"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="status">
+      <span id="status">Modellər yüklənir…</span>
+      · <span id="fps">MediaPipe: – fps</span>
+      · <span id="server" class="bad">Server bağlantısı yoxdur</span>
+    </p>
+    <p>Model AzSLD datasetində öyrədilib: Alishzade &amp; Hasanov (2025), CC BY 4.0,
+      <a href="https://doi.org/10.5281/zenodo.14222948">DOI 10.5281/zenodo.14222948</a>
+      · <a href="signs.html">Mətndən işarəyə (İstiqamət B)</a></p>
+    <details>
+      <summary>Yazma rejimi (komanda üçün)</summary>
+      <fieldset class="record">
+        <legend>Yazma rejimi</legend>
+        <label>Adınız <input id="signer" placeholder="məs. rashid" pattern="[a-z0-9_]+"
+          title="Yalnız kiçik latın hərfləri, rəqəm və _"></label>
+        <label>İşarə <select id="sign"></select></label>
+        <button id="rec-start" type="button" disabled>Yaz</button>
+        <button id="rec-stop" type="button" disabled>Dayan</button>
+        <span id="rec-status"></span>
+      </fieldset>
+    </details>
+  </footer>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
