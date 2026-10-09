@@ -1,13 +1,85 @@
 <!doctype html>
-<!-- Owner: D (Direction B/Speech/Eval). Placeholder page. -->
+<!-- Owner: D (Direction B/Speech/Eval). Chrome speech-to-text test for Azerbaijani (az-AZ). -->
 <html lang="az">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Speech Test</title>
+  <title>Nitq tanıma testi</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #fafafa; color: #222; }
+    main { max-width: 680px; margin: 0 auto; padding: 1rem; }
+    .banner { padding: 0.5rem 1rem; background: #ffe8a3; border-bottom: 1px solid #d9b85c; font-weight: 600; }
+    .interim { color: #777; min-height: 1.5em; }
+    .error { color: #b3261e; min-height: 1.5em; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    td, th { border: 1px solid #ccc; padding: 0.3rem 0.5rem; text-align: left; }
+  </style>
 </head>
 <body>
-  <h1>Speech-to-text test</h1>
-  <p>Under construction.</p>
+  <div class="banner">Test səhifəsi. Səs Google serverlərində tanınır (Chrome Web Speech API).</div>
+  <main>
+    <h1>Nitq tanıma testi (az-AZ)</h1>
+    <p id="support"></p>
+    <p>Bu cümlələri oxuyun: "Sabah həkimə getmək istəyirəm." · "Başım ağrıyır." · "Növbəm nə vaxtdır?" ·
+      "Mənə kömək edin." · "Sənədlərimi gətirmişəm."</p>
+    <label>Danışan <input id="speaker" placeholder="məs. danışan 1"></label>
+    <button id="start" type="button">Başla</button>
+    <button id="stop" type="button" disabled>Dayan</button>
+    <span id="status">Hazır</span>
+    <p class="interim" id="interim"></p>
+    <p class="error" id="error" role="alert"></p>
+    <table>
+      <thead><tr><th>Danışan</th><th>Mətn</th><th>Əminlik</th></tr></thead>
+      <tbody id="results"></tbody>
+    </table>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Recognition) {
+      $("support").textContent = "Bu brauzer nitq tanımanı dəstəkləmir. Chrome lazımdır; yazılı mətn əsas yol olaraq qalır.";
+      $("start").disabled = true;
+    } else {
+      $("support").textContent = "Brauzer webkitSpeechRecognition dəstəkləyir. Dil: az-AZ.";
+      const rec = new Recognition();
+      rec.lang = "az-AZ";
+      rec.interimResults = true;
+      rec.continuous = true;
+      rec.onstart = () => { $("status").textContent = "Dinləyir…"; $("error").textContent = ""; };
+      rec.onresult = (event) => {
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const r = event.results[i];
+          if (r.isFinal) {
+            const row = $("results").insertRow();
+            row.insertCell().textContent = $("speaker").value || "-";
+            row.insertCell().textContent = r[0].transcript.trim();
+            row.insertCell().textContent = r[0].confidence ? r[0].confidence.toFixed(2) : "-";
+          } else {
+            interim += r[0].transcript;
+          }
+        }
+        $("interim").textContent = interim;
+      };
+      rec.onerror = (event) => {
+        $("error").textContent = `Xəta: ${event.error}${event.message ? " (" + event.message + ")" : ""}`;
+      };
+      rec.onend = () => {
+        $("status").textContent = "Dayandı";
+        $("start").disabled = false;
+        $("stop").disabled = true;
+      };
+      $("start").onclick = () => {
+        try {
+          rec.start();
+          $("start").disabled = true;
+          $("stop").disabled = false;
+        } catch (err) {
+          $("error").textContent = `Xəta: ${err.message}`;
+        }
+      };
+      $("stop").onclick = () => rec.stop();
+    }
+  </script>
 </body>
 </html>
