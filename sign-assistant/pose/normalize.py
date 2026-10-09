@@ -8,17 +8,30 @@ L_SHOULDER, R_SHOULDER, L_WRIST, R_WRIST = 11, 12, 15, 16
 
 
 def frames_to_arrays(frames):
-    """Return pose (T,33,4) float32, hands (T,2,21,3) float32 (NaN = missing, unordered), t (T,) ms."""
+    """Return pose (T,33,4) float32, hands (T,2,21,3) float32 (NaN = missing, unordered), t (T,) ms.
+
+    Raises ValueError for a frame that is not in the contract shape (numpy would broadcast it silently).
+    """
     frames = [f for f in frames if f.get("type", "frame") == "frame"]
     pose = np.full((len(frames), 33, 4), np.nan, np.float32)
     hands = np.full((len(frames), 2, 21, 3), np.nan, np.float32)
     for i, f in enumerate(frames):
         if f.get("pose") is not None:
-            pose[i] = f["pose"]
-        for k, hand in enumerate((f.get("hands") or [])[:2]):
-            hands[i, k] = hand
+            pose[i] = _checked(f["pose"], (33, 4), f"frame {i}: pose")
+        found = f.get("hands") or []
+        if len(found) > 2:
+            raise ValueError(f"frame {i}: {len(found)} hands, at most 2")
+        for k, hand in enumerate(found):
+            hands[i, k] = _checked(hand, (21, 3), f"frame {i}: hand {k}")
     t = np.array([f["t"] for f in frames], dtype=np.float64)
     return pose, hands, t
+
+
+def _checked(values, shape, what):
+    array = np.asarray(values, dtype=np.float32)
+    if array.shape != shape:
+        raise ValueError(f"{what} must have shape {shape}, got {array.shape}")
+    return array
 
 
 def assign_hands(pose, hands):
