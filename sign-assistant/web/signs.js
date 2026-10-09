@@ -73,7 +73,7 @@ async function show() {
     const { sequence, source } = await res.json();
     render(sequence);
     $("source").textContent = source === "llm"
-      ? "Sözlər lüğətə Claude ilə uyğunlaşdırılıb."
+      ? "Sözlər lüğətə dil modeli (LLM) ilə uyğunlaşdırılıb; yoxlanmış tərcümə deyil."
       : "Sadə uyğunlaşdırma (LLM əlçatan deyil): yalnız sözün əvvəli lüğətlə tutuşdurulur.";
     $("replay").disabled = !playlist.length;
     setStatus("");
