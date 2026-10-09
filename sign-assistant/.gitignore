@@ -1,0 +1,12 @@
+.env
+data/raw/
+data/landmarks/
+data/clips/
+data/team_recordings/
+model/artifacts/*.pt
+web/models/
+scripts/out/
+*.mp4
+*.npz
+__pycache__/
+.venv/

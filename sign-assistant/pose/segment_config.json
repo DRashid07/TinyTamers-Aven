@@ -1,0 +1,7 @@
+{
+  "raise_y": 1.0,
+  "start_frames": 3,
+  "end_frames": 6,
+  "min_ms": 300,
+  "max_ms": 4000
+}
