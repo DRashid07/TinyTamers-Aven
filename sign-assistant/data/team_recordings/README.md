@@ -54,7 +54,4 @@ From `sign-assistant/`:
 
 This writes the "Team recordings" section of eval/REPORT.md and eval/figures/confusion_team.png, separate from the
 dataset (val/test) numbers. Report them separately and with their limits: few clips per sign, non-native signers.
-
-Note: eval/evaluate.py (commit fe611ec) reads only `*.json` directly in data/team_recordings/, not the `<signer>/`
-subfolders. Until it reads them recursively (`team_dir.rglob("*.json")`), copy all files into one folder and pass it
-with `--team-dir`.
+It reads the `<signer>/` subfolders recursively (P17 fix).
