@@ -1,0 +1,602 @@
+[
+  {
+    "id": "men",
+    "gloss": "MƏN",
+    "az": "mən",
+    "dataset_label": "MƏN"
+  },
+  {
+    "id": "sen",
+    "gloss": "SƏN",
+    "az": "sən",
+    "dataset_label": "SƏN"
+  },
+  {
+    "id": "getmek",
+    "gloss": "GETMƏK",
+    "az": "getmək",
+    "dataset_label": "GETMƏK"
+  },
+  {
+    "id": "istemek",
+    "gloss": "İSTƏMƏK",
+    "az": "istəmək",
+    "dataset_label": "İSTƏMƏK"
+  },
+  {
+    "id": "sabah",
+    "gloss": "SABAH",
+    "az": "sabah",
+    "dataset_label": "SABAH"
+  },
+  {
+    "id": "bu_gun",
+    "gloss": "BU GÜN",
+    "az": "bu gün",
+    "dataset_label": "BU GÜN"
+  },
+  {
+    "id": "sened",
+    "gloss": "SƏNƏD",
+    "az": "sənəd",
+    "dataset_label": "SƏNƏD"
+  },
+  {
+    "id": "siz",
+    "gloss": "SİZ",
+    "az": "siz",
+    "dataset_label": "SİZ"
+  },
+  {
+    "id": "bu",
+    "gloss": "BU",
+    "az": "bu",
+    "dataset_label": "BU"
+  },
+  {
+    "id": "o",
+    "gloss": "O",
+    "az": "o",
+    "dataset_label": "O"
+  },
+  {
+    "id": "menim",
+    "gloss": "MƏNİM",
+    "az": "mənim",
+    "dataset_label": "MƏNİM"
+  },
+  {
+    "id": "biz",
+    "gloss": "BİZ",
+    "az": "biz",
+    "dataset_label": "BİZ"
+  },
+  {
+    "id": "onun",
+    "gloss": "ONUN",
+    "az": "onun",
+    "dataset_label": "ONUN"
+  },
+  {
+    "id": "elil",
+    "gloss": "ƏLİL",
+    "az": "əlil",
+    "dataset_label": "ƏLİL"
+  },
+  {
+    "id": "var",
+    "gloss": "VAR",
+    "az": "var",
+    "dataset_label": "VAR"
+  },
+  {
+    "id": "burda",
+    "gloss": "BURDA",
+    "az": "burda",
+    "dataset_label": "BURDA"
+  },
+  {
+    "id": "ev",
+    "gloss": "EV",
+    "az": "ev",
+    "dataset_label": "EV"
+  },
+  {
+    "id": "usaq",
+    "gloss": "UŞAQ",
+    "az": "uşaq",
+    "dataset_label": "UŞAQ"
+  },
+  {
+    "id": "hansi",
+    "gloss": "HANSI",
+    "az": "hansı",
+    "dataset_label": "HANSI"
+  },
+  {
+    "id": "pensiya",
+    "gloss": "PENSİYA",
+    "az": "pensiya",
+    "dataset_label": "PENSİYA"
+  },
+  {
+    "id": "baki",
+    "gloss": "BAKI",
+    "az": "bakı",
+    "dataset_label": "BAKI"
+  },
+  {
+    "id": "d",
+    "gloss": "D",
+    "az": "d",
+    "dataset_label": "D"
+  },
+  {
+    "id": "saglam",
+    "gloss": "SAĞLAM",
+    "az": "sağlam",
+    "dataset_label": "SAĞLAM"
+  },
+  {
+    "id": "biler",
+    "gloss": "BİLƏR",
+    "az": "bilər",
+    "dataset_label": "BİLƏR"
+  },
+  {
+    "id": "futbol",
+    "gloss": "FUTBOL",
+    "az": "futbol",
+    "dataset_label": "FUTBOL"
+  },
+  {
+    "id": "mene",
+    "gloss": "MƏNƏ",
+    "az": "mənə",
+    "dataset_label": "MƏNƏ"
+  },
+  {
+    "id": "almaq",
+    "gloss": "ALMAQ",
+    "az": "almaq",
+    "dataset_label": "ALMAQ"
+  },
+  {
+    "id": "etibarname",
+    "gloss": "ETİBARNAMƏ",
+    "az": "etibarnamə",
+    "dataset_label": "ETİBARNAMƏ"
+  },
+  {
+    "id": "yox",
+    "gloss": "YOX",
+    "az": "yox",
+    "dataset_label": "YOX"
+  },
+  {
+    "id": "bilmir",
+    "gloss": "BİLMİR",
+    "az": "bilmir",
+    "dataset_label": "BİLMİR"
+  },
+  {
+    "id": "olmaq",
+    "gloss": "OLMAQ",
+    "az": "olmaq",
+    "dataset_label": "OLMAQ"
+  },
+  {
+    "id": "telefon",
+    "gloss": "TELEFON",
+    "az": "telefon",
+    "dataset_label": "TELEFON"
+  },
+  {
+    "id": "dunen",
+    "gloss": "DÜNƏN",
+    "az": "dünən",
+    "dataset_label": "DÜNƏN"
+  },
+  {
+    "id": "is",
+    "gloss": "İŞ",
+    "az": "iş",
+    "dataset_label": "İŞ"
+  },
+  {
+    "id": "viza",
+    "gloss": "VİZA",
+    "az": "viza",
+    "dataset_label": "VİZA"
+  },
+  {
+    "id": "orda",
+    "gloss": "ORDA",
+    "az": "orda",
+    "dataset_label": "ORDA"
+  },
+  {
+    "id": "azerbaycan",
+    "gloss": "AZƏRBAYCAN",
+    "az": "azərbaycan",
+    "dataset_label": "AZƏRBAYCAN"
+  },
+  {
+    "id": "harda",
+    "gloss": "HARDA",
+    "az": "harda",
+    "dataset_label": "HARDA"
+  },
+  {
+    "id": "yemek",
+    "gloss": "YEMƏK",
+    "az": "yemək",
+    "dataset_label": "YEMƏK"
+  },
+  {
+    "id": "ana",
+    "gloss": "ANA",
+    "az": "ana",
+    "dataset_label": "ANA"
+  },
+  {
+    "id": "2",
+    "gloss": "2",
+    "az": "2",
+    "dataset_label": "2"
+  },
+  {
+    "id": "a",
+    "gloss": "A",
+    "az": "a",
+    "dataset_label": "A"
+  },
+  {
+    "id": "ad_gunu",
+    "gloss": "AD GÜNÜ",
+    "az": "ad günü",
+    "dataset_label": "AD GÜNÜ"
+  },
+  {
+    "id": "ata",
+    "gloss": "ATA",
+    "az": "ata",
+    "dataset_label": "ATA"
+  },
+  {
+    "id": "avtobus",
+    "gloss": "AVTOBUS",
+    "az": "avtobus",
+    "dataset_label": "AVTOBUS"
+  },
+  {
+    "id": "avtomobil",
+    "gloss": "AVTOMOBİL",
+    "az": "avtomobil",
+    "dataset_label": "AVTOMOBİL"
+  },
+  {
+    "id": "axsam",
+    "gloss": "AXŞAM",
+    "az": "axşam",
+    "dataset_label": "AXŞAM"
+  },
+  {
+    "id": "agrimaq",
+    "gloss": "AĞRIMAQ",
+    "az": "ağrımaq",
+    "dataset_label": "AĞRIMAQ"
+  },
+  {
+    "id": "aile",
+    "gloss": "AİLƏ",
+    "az": "ailə",
+    "dataset_label": "AİLƏ"
+  },
+  {
+    "id": "balaca",
+    "gloss": "BALACA",
+    "az": "balaca",
+    "dataset_label": "BALACA"
+  },
+  {
+    "id": "bazar",
+    "gloss": "BAZAR",
+    "az": "bazar",
+    "dataset_label": "BAZAR"
+  },
+  {
+    "id": "bag",
+    "gloss": "BAĞ",
+    "az": "bağ",
+    "dataset_label": "BAĞ"
+  },
+  {
+    "id": "bu_hefte",
+    "gloss": "BU HƏFTƏ",
+    "az": "bu həftə",
+    "dataset_label": "BU HƏFTƏ"
+  },
+  {
+    "id": "bura",
+    "gloss": "BURA",
+    "az": "bura",
+    "dataset_label": "BURA"
+  },
+  {
+    "id": "bilmek",
+    "gloss": "BİLMƏK",
+    "az": "bilmək",
+    "dataset_label": "BİLMƏK"
+  },
+  {
+    "id": "dondurma",
+    "gloss": "DONDURMA",
+    "az": "dondurma",
+    "dataset_label": "DONDURMA"
+  },
+  {
+    "id": "edir",
+    "gloss": "EDİR",
+    "az": "edir",
+    "dataset_label": "EDİR"
+  },
+  {
+    "id": "esitme",
+    "gloss": "EŞİTMƏ",
+    "az": "eşitmə",
+    "dataset_label": "EŞİTMƏ"
+  },
+  {
+    "id": "esitme_mehdudiyyetli",
+    "gloss": "EŞİTMƏ MƏHDUDİYYƏTLİ",
+    "az": "eşitmə məhdudiyyətli",
+    "dataset_label": "EŞİTMƏ MƏHDÜDİYYƏTLİ"
+  },
+  {
+    "id": "gecikmek",
+    "gloss": "GECİKMƏK",
+    "az": "gecikmək",
+    "dataset_label": "GECİKMƏK"
+  },
+  {
+    "id": "gormek",
+    "gloss": "GÖRMƏK",
+    "az": "görmək",
+    "dataset_label": "GÖRMƏK"
+  },
+  {
+    "id": "gelmek",
+    "gloss": "GƏLMƏK",
+    "az": "gəlmək",
+    "dataset_label": "GƏLMƏK"
+  },
+  {
+    "id": "hami",
+    "gloss": "HAMI",
+    "az": "hamı",
+    "dataset_label": "HAMI"
+  },
+  {
+    "id": "her_gun",
+    "gloss": "HƏR GÜN",
+    "az": "hər gün",
+    "dataset_label": "HƏR GÜN"
+  },
+  {
+    "id": "lazim",
+    "gloss": "LAZIM",
+    "az": "lazım",
+    "dataset_label": "LAZIM"
+  },
+  {
+    "id": "muraciet",
+    "gloss": "MÜRACİƏT",
+    "az": "müraciət",
+    "dataset_label": "MÜRACİƏT"
+  },
+  {
+    "id": "mekteb",
+    "gloss": "MƏKTƏB",
+    "az": "məktəb",
+    "dataset_label": "MƏKTƏB"
+  },
+  {
+    "id": "nece",
+    "gloss": "NECƏ",
+    "az": "necə",
+    "dataset_label": "NECƏ"
+  },
+  {
+    "id": "nedir",
+    "gloss": "NƏDİR",
+    "az": "nədir",
+    "dataset_label": "NƏDİR"
+  },
+  {
+    "id": "olar",
+    "gloss": "OLAR",
+    "az": "olar",
+    "dataset_label": "OLAR"
+  },
+  {
+    "id": "ora",
+    "gloss": "ORA",
+    "az": "ora",
+    "dataset_label": "ORA"
+  },
+  {
+    "id": "oxumaq",
+    "gloss": "OXUMAQ",
+    "az": "oxumaq",
+    "dataset_label": "OXUMAQ"
+  },
+  {
+    "id": "ogul",
+    "gloss": "OĞUL",
+    "az": "oğul",
+    "dataset_label": "OĞUL"
+  },
+  {
+    "id": "qapi",
+    "gloss": "QAPI",
+    "az": "qapı",
+    "dataset_label": "QAPI"
+  },
+  {
+    "id": "qarabaq",
+    "gloss": "QARABAĞ",
+    "az": "qarabağ",
+    "dataset_label": "QARABAQ"
+  },
+  {
+    "id": "qatar",
+    "gloss": "QATAR",
+    "az": "qatar",
+    "dataset_label": "QATAR"
+  },
+  {
+    "id": "resim",
+    "gloss": "RƏSM",
+    "az": "rəsm",
+    "dataset_label": "RƏSİM"
+  },
+  {
+    "id": "salam",
+    "gloss": "SALAM",
+    "az": "salam",
+    "dataset_label": "SALAM"
+  },
+  {
+    "id": "satici",
+    "gloss": "SATICI",
+    "az": "satıcı",
+    "dataset_label": "SATICI"
+  },
+  {
+    "id": "sonra",
+    "gloss": "SONRA",
+    "az": "sonra",
+    "dataset_label": "SONRA"
+  },
+  {
+    "id": "su",
+    "gloss": "SU",
+    "az": "su",
+    "dataset_label": "SU"
+  },
+  {
+    "id": "sergi",
+    "gloss": "SƏRGİ",
+    "az": "sərgi",
+    "dataset_label": "SƏRGİ"
+  },
+  {
+    "id": "ugur",
+    "gloss": "UĞUR",
+    "az": "uğur",
+    "dataset_label": "UĞUR"
+  },
+  {
+    "id": "vaxt",
+    "gloss": "VAXT",
+    "az": "vaxt",
+    "dataset_label": "VAXT"
+  },
+  {
+    "id": "xatirladim",
+    "gloss": "XATIRLADIM",
+    "az": "xatırladım",
+    "dataset_label": "XATIRLADIM"
+  },
+  {
+    "id": "xeyir",
+    "gloss": "XEYİR",
+    "az": "xeyir",
+    "dataset_label": "XEYİR"
+  },
+  {
+    "id": "yaxsi",
+    "gloss": "YAXŞI",
+    "az": "yaxşı",
+    "dataset_label": "YAXŞI"
+  },
+  {
+    "id": "yas",
+    "gloss": "YAŞ",
+    "az": "yaş",
+    "dataset_label": "YAŞ"
+  },
+  {
+    "id": "yasamaq",
+    "gloss": "YAŞAMAQ",
+    "az": "yaşamaq",
+    "dataset_label": "YAŞAMAQ"
+  },
+  {
+    "id": "yeni",
+    "gloss": "YENİ",
+    "az": "yeni",
+    "dataset_label": "YENİ"
+  },
+  {
+    "id": "cox",
+    "gloss": "ÇOX",
+    "az": "çox",
+    "dataset_label": "ÇOX"
+  },
+  {
+    "id": "cekmek",
+    "gloss": "ÇƏKMƏK",
+    "az": "çəkmək",
+    "dataset_label": "ÇƏKMƏK"
+  },
+  {
+    "id": "unvanli",
+    "gloss": "ÜNVANLI",
+    "az": "ünvanlı",
+    "dataset_label": "ÜNVANLİ"
+  },
+  {
+    "id": "ucun",
+    "gloss": "ÜÇÜN",
+    "az": "üçün",
+    "dataset_label": "ÜÇÜN"
+  },
+  {
+    "id": "i",
+    "gloss": "İ",
+    "az": "i",
+    "dataset_label": "İ"
+  },
+  {
+    "id": "indi",
+    "gloss": "İNDİ",
+    "az": "indi",
+    "dataset_label": "İNDİ"
+  },
+  {
+    "id": "isteyirem",
+    "gloss": "İSTƏYİRƏM",
+    "az": "istəyirəm",
+    "dataset_label": "İSTƏYİRƏM"
+  },
+  {
+    "id": "isare",
+    "gloss": "İŞARƏ",
+    "az": "işarə",
+    "dataset_label": "İŞARƏ"
+  },
+  {
+    "id": "islemek",
+    "gloss": "İŞLƏMƏK",
+    "az": "işləmək",
+    "dataset_label": "İŞLƏMƏK"
+  },
+  {
+    "id": "erzaq",
+    "gloss": "ƏRZAQ",
+    "az": "ərzaq",
+    "dataset_label": "ƏRZAQ"
+  }
+]

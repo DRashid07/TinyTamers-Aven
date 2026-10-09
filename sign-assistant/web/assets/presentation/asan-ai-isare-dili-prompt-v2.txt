@@ -1,0 +1,23 @@
+# Owner: Codex (Presentation image assets).
+# Generator: built-in image_gen.imagegen; transparent_background=false.
+# Edit target: asan-ai-isare-dili-v1.png.
+
+Use case: photorealistic-natural
+Asset type: improved premium 16:9 pitch-deck image of an accessible AI-assisted ASAN xidmət service desk.
+Input image: Image 1 is the EDIT TARGET, the previous ASAN scene. Preserve the scenario, two fictional adult Azerbaijani women, the ASAN setting, and bidirectional sign-language/spoken-language interpretation. Improve the art direction, clarity and physical realism substantially.
+
+Primary request: Make this a compelling polished professional presentation image: a believable human conversation, a beautifully integrated AI interpreter in the table, and immediately clear translation in both directions. Create one coherent photograph with a small editorial explanation, not a gadget advertisement.
+
+People: Keep the Deaf visitor on the LEFT in elegant neutral everyday clothing, seated comfortably and signing with two clearly visible, anatomically convincing hands at chest height. Her mouth is relaxed and closed, her expression attentive and confident. Keep the service employee on the RIGHT in a crisp white shirt and a neat ASAN-blue neck scarf, speaking naturally with her lips slightly parted. Her hands rest naturally near a service form; she is NOT also performing sign language. Warm eye contact, two capable adult peers, candid expressions and believable human skin texture.
+
+Desk and AI: Replace the bulky upright kiosk with a slim refined interpreter terminal built into a clean white service desk between them. Make the display physically face and slightly tilt toward the visitor, while remaining legible from the camera's three-quarter viewpoint. On this ONE display, show only a waist-up female digital avatar demonstrating signing, with BOTH avatar hands visible, one small waveform and restrained violet controls. No duplicate floating avatar, no selfie inset and no second human interpreter. Integrate a tiny camera with a clear view of the visitor's hands, a discreet desk microphone nearer the employee and a flush speaker. The short label "AI assistent" appears cleanly on the device base. Technology supports the encounter without dominating the people.
+
+Composition: Eye-level three-quarter view, balanced cinematic 16:9 framing. Both faces, both visitor hands, the avatar screen and the table's central interface must remain sharp and unobscured. Include more breathing room around the central device. Reduce clutter, excessive desk accessories, oversized flags and distracting background people. A realistic softly defocused bright ASAN service-center backdrop retains readable "ASAN xidmət" signage. Warm wood, white-blue public-service design, soft natural daylight, restrained violet only on the AI details. Premium editorial photography with controlled contrast and natural color.
+
+Translation explanation: REMOVE the previous looping/glowing arrows and detached avatar circle. Replace them with a small beautifully typeset two-row visual annotation along the clear LOWER part of the image, without covering anyone's hands or the device. It has two opposite-direction paths with exactly these labels:
+"İşarə dili → Səs" — a thin violet arrow pointing LEFT TO RIGHT, from the signing visitor via the central AI to the employee's audio.
+"Səs → İşarə dili" — a thin blue arrow pointing RIGHT TO LEFT, from the speaking employee via the AI to the signing avatar seen by the visitor.
+Keep labels in Azerbaijani, correctly spelled, high contrast and readable, on a very subtle light editorial panel. One small hands icon, microphone icon and speaker icon may support the paths. No extra explanatory paragraphs or invented spoken dialogue.
+
+Constraints: Exactly two real women and one digital avatar inside the screen. Preserve a dignified everyday service interaction. No robotic third person, holograms, science-fiction lighting, neon glow, overlapping or ambiguous arrows, extra fingers, malformed hands, disability caricatures, medical equipment, unrelated logos, watermark, stock-photo plastic faces or decorative text. Deliver one complete high-detail opaque image.
+

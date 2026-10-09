@@ -24,6 +24,10 @@ from pose.segment import Segmenter, load_config, segment_offline, status
 ROOT = Path(__file__).resolve().parent.parent
 VOCAB_PATH = ROOT / "data" / "vocab.json"
 PREDICTOR = Predictor(ROOT / os.environ.get("MODEL_DIR", "model/artifacts"))
+LATENCY_BUDGET_MS = 50  # features + inference per segment on CPU; slower segments are logged as warnings
+# Shoulder distance / frame height. AzSLD training clips: 0.28-0.36 (p5-p99). A signer sitting close to a
+# laptop camera is far larger and the model then names wrong signs with high confidence, so it abstains.
+MAX_SHOULDER_WIDTH = 0.44
 
 log = logging.getLogger("uvicorn.error")
 router = APIRouter()
@@ -43,8 +47,18 @@ def check_frame(frame):
         raise ValueError("hands must be 0-2 x 21 x [x, y, z]")
 
 
+def too_close(pose, w, h):
+    """True if the median shoulder width (frames with both shoulders visible) exceeds MAX_SHOULDER_WIDTH."""
+    visible = (pose[:, [11, 12], 3] >= 0.5).all(axis=1)
+    if not visible.any():
+        return False  # no usable shoulders: decide() abstains with invalid_pose anyway
+    width = np.abs(pose[visible, 11, 0] - pose[visible, 12, 0]) * w / h
+    return float(np.median(width)) > MAX_SHOULDER_WIDTH
+
+
 def recognise(frames, w, h, segment_status="ok"):
-    """One cut sign (frame dicts) -> Result. too_short/too_long and a missing model abstain first."""
+    """One cut sign (frame dicts) -> Result. too_short/too_long, a missing model and a signer far closer to
+    the camera than in the training videos abstain before the model runs."""
     start = time.perf_counter()
     if segment_status != "ok":
         result = abstain(segment_status)
@@ -53,16 +67,21 @@ def recognise(frames, w, h, segment_status="ok"):
     else:
         try:
             pose, hands, t = frames_to_arrays(frames)
-            X, info = arrays_to_features(pose, hands, t, w, h, T=PREDICTOR.config["T"])
-            result = decide(PREDICTOR.probs(X), info, PREDICTOR.config, load_vocab())
+            if too_close(pose, w, h):
+                result = abstain("invalid_pose")
+            else:
+                X, info = arrays_to_features(pose, hands, t, w, h, T=PREDICTOR.config["T"])
+                result = decide(PREDICTOR.probs(X), info, PREDICTOR.config, load_vocab())
         except Exception:  # noqa: BLE001 - a model error must abstain, never guess
             log.exception("recognise failed")
             result = abstain("model_not_loaded")
+    latency = (time.perf_counter() - start) * 1000  # features + inference + decide
     duration = frames[-1]["t"] - frames[0]["t"] if frames else 0.0
     outcome = (f"ok {result['id']} {result['confidence']}" if result["status"] == "ok"
                else f"abstain {result['reason']}")
-    log.info("segment: %d frames, %.0f ms, latency %.1f ms -> %s", len(frames), duration,
-             (time.perf_counter() - start) * 1000, outcome)
+    log.log(logging.WARNING if latency > LATENCY_BUDGET_MS else logging.INFO,
+            "segment: %d frames, %.0f ms, latency %.1f ms (budget %d ms) -> %s", len(frames), duration,
+            latency, LATENCY_BUDGET_MS, outcome)
     return result
 
 

@@ -278,5 +278,425 @@
   "start_ms": 0,
   "end_ms": 567,
   "checked": true
+ },
+ "2": {
+  "source_video_id": "033f73cb0cf54447b80de6e92e6b73a7",
+  "signer_id": "rec_2022-07-20",
+  "start_ms": 0,
+  "end_ms": 367,
+  "checked": false
+ },
+ "a": {
+  "source_video_id": "ec8b9f00c45f407784becc5a5dbb58d4",
+  "signer_id": "rec_2022-08-01",
+  "start_ms": 0,
+  "end_ms": 267,
+  "checked": false
+ },
+ "ad_gunu": {
+  "source_video_id": "264ddc1a0939442c83e54f7a096f652c",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 967,
+  "checked": false
+ },
+ "ata": {
+  "source_video_id": "02e13bc1f27543768a2f67aeefda2577",
+  "signer_id": "rec_2022-07-25",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": false
+ },
+ "avtobus": {
+  "source_video_id": "0799eb36803540a89682b540ca06ee8a",
+  "signer_id": "rec_2022-07-19",
+  "start_ms": 0,
+  "end_ms": 667,
+  "checked": false
+ },
+ "avtomobil": {
+  "source_video_id": "0c305edf8d1e4349b55446ac5d5af54b",
+  "signer_id": "rec_2022-11-17",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": false
+ },
+ "axsam": {
+  "source_video_id": "72b6c94b79a540788b9743396a8606d0",
+  "signer_id": "rec_2022-08-01",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": false
+ },
+ "agrimaq": {
+  "source_video_id": "a77de0e09c7d4652bf0a7c2c36ebdbfd",
+  "signer_id": "rec_2022-06-11",
+  "start_ms": 0,
+  "end_ms": 967,
+  "checked": false
+ },
+ "aile": {
+  "source_video_id": "170b2acb633644b2b7d32a5e5c25a55e",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 833,
+  "checked": false
+ },
+ "balaca": {
+  "source_video_id": "503a8301bb554a8c9872a69b08e1ed15",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 767,
+  "checked": false
+ },
+ "bazar": {
+  "source_video_id": "c7c39cb563074538889c64ba764cf86e",
+  "signer_id": "rec_2022-12-24",
+  "start_ms": 0,
+  "end_ms": 500,
+  "checked": false
+ },
+ "bag": {
+  "source_video_id": "1a8aff478a2e42a282eff881423ae0ad",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 1300,
+  "checked": false
+ },
+ "bu_hefte": {
+  "source_video_id": "8343e01444ed4afaa1db7a4f3647d583",
+  "signer_id": "rec_2022-10-28",
+  "start_ms": 0,
+  "end_ms": 1500,
+  "checked": false
+ },
+ "bura": {
+  "source_video_id": "5efce53029de40d980fd701b7cd413d4",
+  "signer_id": "rec_2022-06-18",
+  "start_ms": 0,
+  "end_ms": 533,
+  "checked": false
+ },
+ "bilmek": {
+  "source_video_id": "7a22022581004f239879ef73880b0d5d",
+  "signer_id": "rec_2022-07-19",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": false
+ },
+ "dondurma": {
+  "source_video_id": "50e97953b1d34059b10daccfbfcaca3e",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": false
+ },
+ "edir": {
+  "source_video_id": "1733a6690db64db1afb0cd4466a3a043",
+  "signer_id": "rec_2022-11-17",
+  "start_ms": 0,
+  "end_ms": 933,
+  "checked": false
+ },
+ "esitme": {
+  "source_video_id": "11e2ca14e428432fb50d0597f4e35e22",
+  "signer_id": "rec_2022-06-11",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": false
+ },
+ "esitme_mehdudiyyetli": {
+  "source_video_id": "31d524730bfe44729b71c9eaccccc99d",
+  "signer_id": "rec_2022-10-28",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": false
+ },
+ "gecikmek": {
+  "source_video_id": "130cae0a3e5740b999aa93f2c2f7fcac",
+  "signer_id": "rec_2022-11-18",
+  "start_ms": 0,
+  "end_ms": 900,
+  "checked": false
+ },
+ "gormek": {
+  "source_video_id": "0addaa2a9646420e9fe7367cb8dadd5f",
+  "signer_id": "rec_2022-07-15",
+  "start_ms": 0,
+  "end_ms": 967,
+  "checked": false
+ },
+ "gelmek": {
+  "source_video_id": "37dfe94220ca49f0a111463dbff1367b",
+  "signer_id": "rec_2022-12-27",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": false
+ },
+ "hami": {
+  "source_video_id": "82dd3357c8304bef884759fe89c0dc97",
+  "signer_id": "rec_2022-12-27",
+  "start_ms": 0,
+  "end_ms": 933,
+  "checked": false
+ },
+ "her_gun": {
+  "source_video_id": "d1b159f0eef04c64b0c64b6ba9fc7786",
+  "signer_id": "rec_2022-07-18",
+  "start_ms": 0,
+  "end_ms": 1400,
+  "checked": false
+ },
+ "lazim": {
+  "source_video_id": "6cfca7724d5d49718ffd409462b50a86",
+  "signer_id": "rec_2022-07-02",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": false
+ },
+ "muraciet": {
+  "source_video_id": "45ca5ce9a76b4b559cbecdda9293227a",
+  "signer_id": "rec_2022-06-11",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": false
+ },
+ "mekteb": {
+  "source_video_id": "b9c5f1f130ad4c159058bc6052d7f3c7",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": false
+ },
+ "nece": {
+  "source_video_id": "ba1e0da2753a491887decbb463eafc7b",
+  "signer_id": "rec_2022-08-01",
+  "start_ms": 0,
+  "end_ms": 533,
+  "checked": false
+ },
+ "nedir": {
+  "source_video_id": "449985c216fd405ca30277c0179efa71",
+  "signer_id": "rec_2022-07-22",
+  "start_ms": 0,
+  "end_ms": 933,
+  "checked": false
+ },
+ "olar": {
+  "source_video_id": "f5324296eee843b4980ac937db0ead29",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": false
+ },
+ "ora": {
+  "source_video_id": "3dbde452456e40ca863e800bced6e5f5",
+  "signer_id": "rec_2022-08-01",
+  "start_ms": 0,
+  "end_ms": 600,
+  "checked": false
+ },
+ "oxumaq": {
+  "source_video_id": "0705ceb637ac4532b3138004e9fda0ef",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 733,
+  "checked": false
+ },
+ "ogul": {
+  "source_video_id": "a8d10d114ef1479fa2d9b55859b5707e",
+  "signer_id": "rec_2022-06-13",
+  "start_ms": 0,
+  "end_ms": 667,
+  "checked": false
+ },
+ "qapi": {
+  "source_video_id": "481864698534403f89e940e675b0b421",
+  "signer_id": "rec_2022-07-16",
+  "start_ms": 0,
+  "end_ms": 533,
+  "checked": false
+ },
+ "qarabaq": {
+  "source_video_id": "e040fc770d504fbf8d5ceff6a519ad52",
+  "signer_id": "rec_2022-07-01",
+  "start_ms": 0,
+  "end_ms": 833,
+  "checked": false
+ },
+ "qatar": {
+  "source_video_id": "3991dcd5a998478092ccfbc24aa8a62a",
+  "signer_id": "rec_2022-12-17",
+  "start_ms": 0,
+  "end_ms": 1167,
+  "checked": false
+ },
+ "resim": {
+  "source_video_id": "dc28e486dd9442028f2a5f2ef7fe1684",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 1133,
+  "checked": false
+ },
+ "salam": {
+  "source_video_id": "3678ef0b155b4f74971e4a56923d9a33",
+  "signer_id": "rec_2022-06-01",
+  "start_ms": 0,
+  "end_ms": 1367,
+  "checked": false
+ },
+ "satici": {
+  "source_video_id": "80fe5ebe4a914e7487a03dd6c6a87f31",
+  "signer_id": "rec_2022-12-22",
+  "start_ms": 0,
+  "end_ms": 667,
+  "checked": false
+ },
+ "sonra": {
+  "source_video_id": "50510ea80ee04c60b8defaa018ad848f",
+  "signer_id": "rec_2022-07-01",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": false
+ },
+ "su": {
+  "source_video_id": "38a5eb53b9b14054aab89716a61bffba",
+  "signer_id": "rec_2022-07-18",
+  "start_ms": 0,
+  "end_ms": 433,
+  "checked": false
+ },
+ "sergi": {
+  "source_video_id": "578bc066c0d148d29f9b95dd85f350cc",
+  "signer_id": "rec_2022-07-25",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": false
+ },
+ "ugur": {
+  "source_video_id": "a875977212cc4845b400c4e9ae6223ae",
+  "signer_id": "",
+  "start_ms": 0,
+  "end_ms": 1200,
+  "checked": false
+ },
+ "vaxt": {
+  "source_video_id": "0df3541a43cc4ec1884d224afe234689",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 533,
+  "checked": false
+ },
+ "xatirladim": {
+  "source_video_id": "211d6c7dc969414b9c3ca3422791fc98",
+  "signer_id": "rec_2022-11-18",
+  "start_ms": 0,
+  "end_ms": 800,
+  "checked": false
+ },
+ "xeyir": {
+  "source_video_id": "b7be2f12cfa249b4ad8c1d0c37dbf1b5",
+  "signer_id": "rec_2022-06-11",
+  "start_ms": 0,
+  "end_ms": 1133,
+  "checked": false
+ },
+ "yaxsi": {
+  "source_video_id": "f0fc151ac1b14c7baad0bfcb460074dd",
+  "signer_id": "rec_2022-11-17",
+  "start_ms": 0,
+  "end_ms": 600,
+  "checked": false
+ },
+ "yas": {
+  "source_video_id": "0036b8df55f247108ca5aff2670124bc",
+  "signer_id": "rec_2023-01-19",
+  "start_ms": 0,
+  "end_ms": 433,
+  "checked": false
+ },
+ "yasamaq": {
+  "source_video_id": "19fd5bea589a4e3981d1c513183656c4",
+  "signer_id": "rec_2022-05-24",
+  "start_ms": 0,
+  "end_ms": 1100,
+  "checked": false
+ },
+ "yeni": {
+  "source_video_id": "6c329669d3644f3daec0fc09c4d6760b",
+  "signer_id": "rec_2022-07-18",
+  "start_ms": 0,
+  "end_ms": 567,
+  "checked": false
+ },
+ "cox": {
+  "source_video_id": "2137cc66c20544f9ac7eb6d9988a386d",
+  "signer_id": "rec_2022-06-13",
+  "start_ms": 0,
+  "end_ms": 500,
+  "checked": false
+ },
+ "cekmek": {
+  "source_video_id": "157798f38404458ebf4f66756aaeabb6",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": false
+ },
+ "unvanli": {
+  "source_video_id": "832d45d770394daaaad9da504e1aa1f8",
+  "signer_id": "rec_2022-12-23",
+  "start_ms": 0,
+  "end_ms": 867,
+  "checked": false
+ },
+ "ucun": {
+  "source_video_id": "73c16f9109bc4e6facb7d55b904ee190",
+  "signer_id": "rec_2022-11-22",
+  "start_ms": 0,
+  "end_ms": 700,
+  "checked": false
+ },
+ "i": {
+  "source_video_id": "ede565a7934d42f59cc142d45885f0ce",
+  "signer_id": "rec_2022-11-18",
+  "start_ms": 0,
+  "end_ms": 400,
+  "checked": false
+ },
+ "indi": {
+  "source_video_id": "07ae16681e584454abde28fb294db9ac",
+  "signer_id": "rec_2022-12-17",
+  "start_ms": 0,
+  "end_ms": 533,
+  "checked": false
+ },
+ "isteyirem": {
+  "source_video_id": "3c6dcd7a17834c9a949b3d23d4f7dd34",
+  "signer_id": "rec_2022-07-23",
+  "start_ms": 0,
+  "end_ms": 933,
+  "checked": false
+ },
+ "isare": {
+  "source_video_id": "7a70e257485d4f3e9df6f812a34d5222",
+  "signer_id": "rec_2022-12-27",
+  "start_ms": 0,
+  "end_ms": 1100,
+  "checked": false
+ },
+ "islemek": {
+  "source_video_id": "9c8584b37c724139ab899094cf60ad79",
+  "signer_id": "rec_2022-11-10",
+  "start_ms": 0,
+  "end_ms": 633,
+  "checked": false
+ },
+ "erzaq": {
+  "source_video_id": "0afb0787688b4080a3c3d6d1ad21160e",
+  "signer_id": "rec_2022-11-18",
+  "start_ms": 0,
+  "end_ms": 1267,
+  "checked": false
  }
 }

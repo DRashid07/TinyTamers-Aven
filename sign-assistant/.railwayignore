@@ -1,0 +1,29 @@
+# Railway-ə yalnız serverin işi üçün lazım olanlar gedir. Deploy `railway up --no-gitignore` ilə edilir ki,
+# git-də olmayan model.pt + config.json, data/clips/*.mp4 və web/models/*.task da getsin; ona görə
+# sirlər və böyük data burada mütləq istisna olunur.
+
+# sirlər: açarlar Railway dəyişənlərindədir
+.env
+.env.*
+!.env.example
+
+# lokal mühit və keş
+.venv/
+__pycache__/
+.pytest_cache/
+
+# xam data, landmark faylları, komanda yazıları, səs nümunələri
+data/raw/
+data/landmarks/
+data/team_recordings/
+data/reports/
+scripts/out/
+
+# serverə lazım olmayanlar
+tests/
+eval/
+docs/
+web/assets/
+model/artifacts/transformer.*
+model/artifacts/*.csv
+*.md

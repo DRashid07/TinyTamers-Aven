@@ -1,4 +1,5 @@
-// Owner: B (Frontend). Webcam -> MediaPipe landmarks -> /ws/recognise, plus record mode.
+// Owner: B (Frontend). Direction A: webcam -> MediaPipe landmarks -> /ws/recognise -> word buffer
+// -> /compose-sentence (only on "Cümlə qur") -> /tts, plus record mode.
 // Webcam frames never leave the browser; only landmark coordinates are sent.
 import {
   DrawingUtils, FilesetResolver, HandLandmarker, PoseLandmarker,
@@ -9,6 +10,25 @@ const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm"
 const MAX_SEND_FPS = 30;
 const UPPER_BODY = 25; // pose points 0-24: face, shoulders, arms, hands, hips
 const POSE_UPPER = PoseLandmarker.POSE_CONNECTIONS.filter((c) => c.start < UPPER_BODY && c.end < UPPER_BODY);
+const MAX_WORDS = 12; // POST /compose-sentence accepts 1-12 ids
+const HOLD_MS = 2500; // how long a result stays in the status pill
+const ABSTAIN_TEXT = "Əmin deyiləm, zəhmət olmasa təkrar edin.";
+// Short reason under the abstain message, so the signer knows what to change. Never a word.
+const ABSTAIN_DETAIL = {
+  too_short: "işarə çox qısa oldu",
+  too_long: "işarə çox uzun oldu: işarələr arasında əlləri aşağı salın",
+  no_hands: "əllər görünmədi",
+  invalid_pose: "çiyinlər görünmür və ya kameraya çox yaxınsınız",
+  low_confidence: "tanınmadı və ya bu söz lüğətdə yoxdur",
+  small_margin: "iki işarə arasında qərar verə bilmədi",
+  model_not_loaded: "model yüklənməyib",
+};
+// Training videos show the signer from the head to the waist: shoulder distance 0.28-0.36 of the frame
+// height. The server abstains above 0.44 (api/routes_recognise.py), so the idle pill says how to sit.
+const MAX_SHOULDER_WIDTH = 0.44;
+const MIN_SHOULDER_WIDTH = 0.18;
+const MODELS = { pose: "models/pose_landmarker_lite.task", hand: "models/hand_landmarker.task" };
+const MODELS_MB = 13.6; // both .task files together; the browser caches them after the first visit
 
 const $ = (id) => document.getElementById(id);
 const video = $("video");
@@ -22,6 +42,10 @@ let lastSent = -Infinity;
 let fpsFrames = 0, fpsMs = 0, fpsStart = performance.now();
 let recording = null; // {id, signer, w, h, frames} while "Yaz" is on
 const recCounts = {};
+const words = []; // the word buffer: {id, gloss} of "ok" results only, never of an abstain
+let pillTimer = null;
+let ttsAvailable = true; // false after /tts answers 503 (not configured)
+let framing = { hint: "", candidate: "", frames: 0 }; // hint shown in the idle pill once stable for 15 frames
 
 function setText(id, text, cls) {
   $(id).textContent = text;
@@ -67,6 +91,7 @@ function loop() {
   const h = hands.detectForVideo(video, t);
   countFps(t, performance.now() - t);
   draw(p, h);
+  updateFraming(p.landmarks[0]);
 
   const frame = {
     type: "frame",
@@ -117,6 +142,7 @@ function connect() {
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "start", w: video.videoWidth, h: video.videoHeight }));
     setText("server", "Serverə qoşulub", "ok");
+    idlePill();
   };
   ws.onmessage = (event) => {
     try {
@@ -127,18 +153,144 @@ function connect() {
   };
   ws.onclose = () => {
     setText("server", "Server bağlantısı yoxdur", "bad");
+    setPill("offline", "Server bağlantısı yoxdur");
     setTimeout(connect, 2000);
   };
 }
 
+// Status pill: "Gözləyirəm" -> "İşarə edilir..." -> result, which goes back to idle after holdMs.
+function setPill(state, text, detail = "", holdMs = 0) {
+  clearTimeout(pillTimer);
+  const pill = $("pill");
+  pill.className = `pill ${state}`;
+  pill.textContent = text;
+  if (detail) {
+    const small = document.createElement("small");
+    small.textContent = detail;
+    pill.append(small);
+  }
+  if (holdMs) pillTimer = setTimeout(idlePill, holdMs);
+}
+
+function idlePill() {
+  setPill("idle", "Gözləyirəm", framing.hint);
+}
+
+// How the signer sits compared with the training videos (pose landmarks of the unmirrored frame).
+function framingHint(pose) {
+  if (!pose) return "Kamerada insan görünmür";
+  const [left, right] = [pose[11], pose[12]];
+  if ((left.visibility ?? 0) < 0.5 || (right.visibility ?? 0) < 0.5) return "Çiyinləriniz görünmür: bir az geri oturun";
+  const width = Math.abs(left.x - right.x) * (video.videoWidth / video.videoHeight);
+  if (width > MAX_SHOULDER_WIDTH) return "Kameraya çox yaxınsınız: geri oturun ki, başdan belə qədər görünəsiniz";
+  if (width < MIN_SHOULDER_WIDTH) return "Kameradan çox uzaqsınız: bir az yaxınlaşın";
+  return "";
+}
+
+function updateFraming(pose) {
+  const hint = framingHint(pose);
+  framing.frames = hint === framing.candidate ? framing.frames + 1 : 0;
+  framing.candidate = hint;
+  if (framing.frames < 15 || hint === framing.hint) return; // about half a second without change
+  framing.hint = hint;
+  if ($("pill").classList.contains("idle")) idlePill();
+}
+
 function showMessage(msg) {
-  if (msg.type === "state" && msg.signing) setText("result", "İşarə göstərilir…");
-  if (msg.type === "result") {
-    setText("result", msg.status === "ok"
-      ? `Təxmin: ${msg.gloss} (${Math.round(msg.confidence * 100)}%)`
-      : msg.message);
+  if (msg.type === "state") {
+    if (msg.signing) setPill("signing", "İşarə edilir...");
+    return;
+  }
+  if (msg.type !== "result") return;
+  if (msg.status === "ok" && msg.id && msg.gloss) {
+    addWord(msg.id, msg.gloss);
+    setPill("ok", msg.gloss, `əminlik ${Math.round(msg.confidence * 100)}%`, HOLD_MS);
+  } else {
+    setPill("abstain", ABSTAIN_TEXT, ABSTAIN_DETAIL[msg.reason] || "", HOLD_MS); // an abstain never adds a word
   }
 }
+
+function addWord(id, gloss) {
+  if (words.length >= MAX_WORDS) {
+    setText("buffer-note", `Ən çox ${MAX_WORDS} söz: əvvəl cümlə qurun, sonra Təmizlə.`, "note bad");
+    return;
+  }
+  words.push({ id, gloss });
+  renderWords();
+}
+
+function renderWords() {
+  $("buffer").replaceChildren(...words.map((w) => {
+    const li = document.createElement("li");
+    li.textContent = w.gloss;
+    return li;
+  }));
+  $("undo").disabled = $("clear").disabled = $("compose").disabled = !words.length;
+  setText("buffer-note", words.length ? "" : "Tanınan sözlər burada görünəcək.", "note");
+  $("sentence-panel").hidden = true; // a composed sentence belongs to the old buffer
+}
+
+function showSentence(result) {
+  $("sentence").textContent = result.sentence;
+  $("glosses").textContent = `Tanınan işarələr: ${result.glosses.join(" · ")}`;
+  $("assumptions").replaceChildren(...result.assumptions.map((a) => {
+    const li = document.createElement("li");
+    li.textContent = a;
+    return li;
+  }));
+  $("fallback-note").hidden = result.source === "llm" && result.ok;
+  $("speak").hidden = !ttsAvailable;
+  setText("speak-status", "", "note");
+  $("sentence-panel").hidden = false;
+}
+
+async function postJson(url, body) {
+  return fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+}
+
+$("undo").onclick = () => { words.pop(); renderWords(); };
+$("clear").onclick = () => { words.length = 0; renderWords(); };
+
+$("compose").onclick = async () => {
+  const ids = words.map((w) => w.id);
+  if (!ids.length) return;
+  $("compose").disabled = true;
+  setText("buffer-note", "Cümlə qurulur…", "note");
+  try {
+    const res = await postJson("/compose-sentence", { ids });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    if (ids.join() !== words.map((w) => w.id).join()) return setText("buffer-note", "Sözlər dəyişdi: yenidən Cümlə qur.", "note");
+    showSentence(result);
+    setText("buffer-note", "", "note");
+  } catch (err) {
+    setText("buffer-note", `Cümlə qurulmadı (${err.message})`, "note bad");
+  } finally {
+    $("compose").disabled = !words.length;
+  }
+};
+
+$("speak").onclick = async () => { // audio only ever starts from this click
+  $("speak").disabled = true;
+  setText("speak-status", "", "note");
+  try {
+    const res = await postJson("/tts", { text: $("sentence").textContent });
+    if (res.status === 503) {
+      ttsAvailable = false;
+      $("speak").hidden = true;
+      return setText("speak-status", "Səsləndirmə qoşulmayıb.", "note");
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const url = URL.createObjectURL(await res.blob());
+    const audio = new Audio(url);
+    audio.onended = () => URL.revokeObjectURL(url);
+    await audio.play();
+  } catch (err) {
+    setText("speak-status", `Səsləndirmə alınmadı (${err.message})`, "note bad");
+  } finally {
+    $("speak").disabled = false;
+  }
+};
 
 async function loadVocab() {
   try {
@@ -191,24 +343,64 @@ $("rec-stop").onclick = () => {
   setText("rec-status", `Yükləndi: ${name} (${rec.frames.length} kadr)`, "ok");
 };
 
+// Download a model file chunk by chunk, so a slow network shows progress instead of a frozen page.
+async function fetchModel(url, onBytes) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status} (bash scripts/get_models.sh)`);
+  const reader = res.body.getReader();
+  const chunks = [];
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    onBytes(value.length);
+  }
+  return new Uint8Array(await new Blob(chunks).arrayBuffer());
+}
+
+// Fetch MediaPipe's wasm files now, in parallel with the models, so createFromOptions finds them in the
+// browser cache instead of downloading them one after the other.
+async function prefetchWasm(vision) {
+  await Promise.all([vision.wasmLoaderPath, vision.wasmBinaryPath].map((url) => fetch(url).then((r) => r.blob())));
+  return vision;
+}
+
 async function main() {
   loadVocab();
+  setText("server", "Server: modellər yüklənəndən sonra qoşulur", "");
   try {
-    const vision = await FilesetResolver.forVisionTasks(WASM);
+    let loaded = 0;
+    const progress = (bytes) => {
+      loaded += bytes;
+      const mb = loaded / 1e6;
+      setPill("wait", "Hazırlanır…", `${Math.min(99, Math.round((mb / MODELS_MB) * 100))}%`);
+      setText("status", `Modellər yüklənir: ${mb.toFixed(1)} / ${MODELS_MB} MB (ilk dəfə bir neçə dəqiqə çəkə bilər)`);
+    };
+    // Everything starts downloading at once, also while the camera permission prompt is open.
+    const downloads = Promise.all([
+      FilesetResolver.forVisionTasks(WASM).then(prefetchWasm),
+      fetchModel(MODELS.pose, progress), fetchModel(MODELS.hand, progress),
+    ]);
+    downloads.catch(() => {}); // a failure is reported below, after the camera step
+    setPill("wait", "Kamera açılır…");
+    await startCamera(); // the preview runs while the models download
+    if (!loaded) setPill("wait", "Hazırlanır…");
+    const [vision, poseModel, handModel] = await downloads;
+    setText("status", "Modellər işə salınır…");
     const p = await createLandmarker(PoseLandmarker, vision, {
-      baseOptions: { modelAssetPath: "models/pose_landmarker_lite.task" }, runningMode: "VIDEO", numPoses: 1,
+      baseOptions: { modelAssetBuffer: poseModel }, runningMode: "VIDEO", numPoses: 1,
     });
     const h = await createLandmarker(HandLandmarker, vision, {
-      baseOptions: { modelAssetPath: "models/hand_landmarker.task" }, runningMode: "VIDEO", numHands: 2,
+      baseOptions: { modelAssetBuffer: handModel }, runningMode: "VIDEO", numHands: 2,
     });
     pose = p.task;
     hands = h.task;
-    setText("status", "Kamera açılır…");
-    await startCamera();
     setText("status", `Hazır (poza: ${p.delegate}, əllər: ${h.delegate})`, "ok");
   } catch (err) {
     console.error(err);
-    setText("status", err.name === "NotAllowedError" ? "Kameraya icazə verilmədi" : `Xəta: ${err.message}`, "bad");
+    const text = err.name === "NotAllowedError" ? "Kameraya icazə verilmədi" : `Xəta: ${err.message}`;
+    setText("status", text, "bad");
+    setPill("offline", text);
     return;
   }
   connect();

@@ -1,0 +1,14 @@
+# Owner: Codex (Brand/logo assets).
+# Generator: built-in image_gen.imagegen; transparent_background=true.
+
+Use case: logo-brand
+Asset type: final premium logo for the Azerbaijani Sign Language assistive web project "AzSL Assistant"; transparent PNG for the website header and hackathon presentation.
+Primary request: Create one outstanding, original, professionally finished horizontal brand lockup that feels appropriate beside Azercell's contemporary violet telecom branding. The product helps people communicate using Azerbaijani sign language, webcam gesture recognition and text-to-sign video clips. The logo must convey inclusive communication, a human gesture, and smooth connection.
+Subject: One distinctive compact abstract emblem at left: a beautifully reduced gesturing hand formed from a flowing violet ribbon, with three clean rounded finger-like terminals, an open palm-shaped negative space, and a short graceful lower turn suggesting a speech-bubble tail. Integrate the gestures into ONE coherent memorable silhouette; use optical balance and generous internal negative space. This is an abstract communication gesture, not a depiction of any specific word in sign language.
+Typography: To the right, exact text "AzSL" in an elegant contemporary geometric/humanist sans serif, medium-semibold weight, meticulous custom spacing. Exact capitalisation A-z-S-L. Under "AzSL", left-aligned, exact text "Assistant", much smaller, in refined regular sans serif with subtle tracking. The dominant AzSL name and emblem must have equal visual stature. No additional text.
+Color palette: rich violet #65269E with a restrained violet-to-orchid transition toward #B62B91 on the emblem only; wordmark deep plum #241432. Treat these as an inspired project palette, not official brand specification.
+Style/medium: crisp vector-like logo artwork, smooth precise edges, flat two-dimensional design, upscale but warm and accessible. Premium comes from proportions and simplicity.
+Composition/framing: landscape canvas, one horizontal lockup centered with generous transparent safe margins. Icon about 28% of the artwork width, wordmark about 62%, balanced gap. All artwork fully visible.
+Scene/backdrop: genuinely transparent alpha background.
+Constraints: original project identity; no Azercell lettering or reproduction of its corporate symbol; no claim of partnership; no mockups, business cards, logo sheets, 3D, bevels, shadows, metallic gold, glossy surfaces, glow, decorative background, watermark, slogans, photographic hands, brain or robot imagery. Do not draw a checkerboard as image content. Deliver only this one finished logo.
+
