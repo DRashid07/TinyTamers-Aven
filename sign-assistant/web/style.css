@@ -1,9 +1,10 @@
-/* Owner: B (Frontend). */
+/* Owner: B (Frontend). Large type and high contrast: index.html must read on a 1280x720 projector.
+   signs.html shares the base rules; the Direction A layout lives under .app. */
 body {
   font-family: system-ui, sans-serif;
   margin: 0;
-  background: #fafafa;
-  color: #222;
+  background: #fff;
+  color: #111;
 }
 
 main {
@@ -12,20 +13,25 @@ main {
   padding: 1rem;
 }
 
+a { color: #0b4fb3; }
+
 .banner {
   position: sticky;
   top: 0;
-  z-index: 1;
-  padding: 0.5rem 1rem;
-  background: #ffe8a3;
-  border-bottom: 1px solid #d9b85c;
-  font-weight: 600;
+  z-index: 2;
+  padding: 0.45rem 1rem;
+  background: #ffd23f;
+  color: #111;
+  border-bottom: 2px solid #8a6d00;
+  font-size: 1.1rem;
+  font-weight: 700;
   text-align: center;
 }
 
 .status { font-size: 0.95rem; }
-.ok { color: #1f7a33; }
+.ok { color: #1b5e20; }
 .bad { color: #b3261e; }
+.note { font-size: 0.85rem; color: #444; }
 
 /* Only the preview is mirrored; MediaPipe always gets the unmirrored video. */
 .stage {
@@ -43,12 +49,93 @@ main {
   height: 100%;
 }
 
-.result {
-  min-height: 1.5em;
-  font-size: 1.3rem;
+/* Direction A (index.html) */
+.app {
+  max-width: 1240px;
+  display: grid;
+  grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 1.25rem;
 }
 
-.note { font-size: 0.85rem; color: #555; }
+.app h2 { margin: 0 0 0.4rem; font-size: 1.3rem; }
+.app .note { margin: 0.4rem 0; }
+
+.app button {
+  min-height: 2.6rem;
+  padding: 0.3rem 1rem;
+  border: 2px solid #111;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.app button.primary { background: #0b4fb3; border-color: #0b4fb3; color: #fff; }
+.app button:disabled { opacity: 0.4; cursor: default; }
+.app button:focus-visible { outline: 3px solid #ffb300; outline-offset: 2px; }
+
+.pill {
+  margin-bottom: 0.6rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.pill small { margin-left: 0.6rem; font-size: 1rem; font-weight: 400; }
+.pill.wait, .pill.idle { background: #e6e6e6; color: #111; }
+.pill.signing { background: #0b4fb3; color: #fff; }
+.pill.ok { background: #1b5e20; color: #fff; }
+.pill.abstain { background: #ffb300; color: #111; font-size: 1.35rem; }
+.pill.offline { background: #b3261e; color: #fff; }
+
+.word-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 2.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.word-chips li {
+  padding: 0.25rem 0.9rem;
+  border: 2px solid #111;
+  border-radius: 999px;
+  background: #f0f0f0;
+  font-weight: 700;
+}
+
+.buttons { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.6rem 0 0.9rem; }
+
+.sentence-panel { border-top: 2px solid #111; padding-top: 0.6rem; }
+.sentence { margin: 0 0 0.4rem; font-size: 2rem; font-weight: 700; line-height: 1.25; }
+.glosses { margin: 0 0 0.3rem; font-size: 1.05rem; }
+.assumptions { margin: 0 0 0.4rem; padding-left: 1.2rem; font-size: 0.95rem; color: #333; }
+
+.warn-note {
+  margin: 0 0 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border-left: 4px solid #ffb300;
+  background: #fff3cd;
+  font-size: 1rem;
+}
+
+footer {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1rem 0.6rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+footer p { margin: 0.2rem 0; }
 
 .record {
   display: flex;
@@ -58,3 +145,7 @@ main {
 }
 
 .record input:invalid { border-color: #b3261e; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+}
