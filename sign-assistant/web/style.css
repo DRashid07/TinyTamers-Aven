@@ -94,6 +94,12 @@ a { color: var(--accent); }
 }
 
 .topnav a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.signs .topnav { padding: 0; }
+
+/* Product name */
+.brand { display: inline-flex; align-items: baseline; gap: 8px; }
+.brand strong { color: var(--accent); font-size: 1.4rem; letter-spacing: 0.02em; }
+.tagline { color: var(--muted); font-size: 0.9rem; }
 
 .status { font-size: 0.95rem; color: var(--muted); }
 .ok { color: var(--ok); }
