@@ -1,15 +1,39 @@
 <!doctype html>
-<!-- Owner: B (Frontend). Placeholder page. -->
+<!-- Owner: B (Frontend). Webcam landmarks -> /ws/recognise, plus record mode. -->
 <html lang="az">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AzSL Assistant</title>
+  <title>AzSL köməkçisi</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>AzSL Assistant</h1>
-  <p>Assistive prototype, not a validated translator. Under construction.</p>
-  <script src="app.js"></script>
+  <div class="banner" role="note">Köməkçi prototip. Təsdiqlənmiş tərcümə deyil.</div>
+  <main>
+    <h1>AzSL köməkçisi</h1>
+    <p class="status">
+      <span id="status">Modellər yüklənir…</span>
+      · <span id="fps">MediaPipe: – fps</span>
+      · <span id="server" class="bad">Server bağlantısı yoxdur</span>
+    </p>
+
+    <div class="stage">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <p id="result" class="result" aria-live="polite"></p>
+    <p class="note">Kamera görüntüsü brauzerdən çıxmır: serverə yalnız nöqtə koordinatları göndərilir.</p>
+
+    <fieldset class="record">
+      <legend>Yazma rejimi</legend>
+      <label>Adınız <input id="signer" placeholder="məs. rashid" pattern="[a-z0-9_]+"
+        title="Yalnız kiçik latın hərfləri, rəqəm və _"></label>
+      <label>İşarə <select id="sign"></select></label>
+      <button id="rec-start" type="button" disabled>Yaz</button>
+      <button id="rec-stop" type="button" disabled>Dayan</button>
+      <span id="rec-status"></span>
+    </fieldset>
+  </main>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
