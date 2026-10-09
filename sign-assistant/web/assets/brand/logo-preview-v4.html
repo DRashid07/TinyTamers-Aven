@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- Owner: Codex (Brand/logo assets). -->
+<html lang="az">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AzSL — Ünsiyyət körpüsü</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: clamp(24px, 5vw, 72px); background: #eeece8; color: #2c203b; font-family: system-ui, sans-serif; }
+    main { max-width: 1120px; margin: auto; }
+    header { padding: 0 0 28px; }
+    h1 { margin: 0 0 8px; font-size: clamp(22px, 3vw, 32px); font-weight: 500; letter-spacing: -.025em; }
+    p { margin: 0; color: #6d6377; line-height: 1.6; }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    figure { margin: 0; min-width: 0; background: #faf9f6; border-radius: 8px; overflow: hidden; }
+    .surface { min-height: 370px; padding: 48px; display: grid; place-items: center; }
+    .surface img { display: block; width: min(100%, 300px); height: auto; }
+    .night { background: #21152e; }
+    .night img { filter: brightness(0) invert(1); }
+    figcaption { padding: 18px 24px; color: #71667c; font-size: 12px; border-top: 1px solid #ece8ee; }
+    .night figcaption { color: #d5cadd; border-color: #3a2c47; }
+    .sizes { display: flex; align-items: center; justify-content: center; gap: 48px; padding: 32px; background: #faf9f6; margin-top: 20px; border-radius: 8px; }
+    .sizes img { display: block; height: auto; }
+    nav { margin-top: 28px; display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; font-size: 13px; }
+    a { color: #60269e; text-underline-offset: 4px; }
+    @media(max-width:640px) { .pair { grid-template-columns: 1fr; } .surface { min-height: 320px; padding: 32px; } .sizes { gap: 28px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header><h1>Ünsiyyət körpüsü</h1><p>İşarə və mətn/səs arasında qarşılıqlı anlaşma.</p></header>
+    <div class="pair">
+      <figure>
+        <div class="surface"><img src="azsl-communication-bridge-v4.png" alt="AzSL yazısız loqosu: iki açıq bənövşəyi ünsiyyət yolu" width="1254" height="1254"></div>
+        <figcaption>Əsas bənövşəyi loqo</figcaption>
+      </figure>
+      <figure class="night">
+        <div class="surface"><img src="azsl-communication-bridge-v4.png" alt="AzSL loqosunun tünd fonda ağ tətbiq nümunəsi" width="1254" height="1254"></div>
+        <figcaption>Tünd fonda tətbiq nümunəsi</figcaption>
+      </figure>
+    </div>
+    <div class="sizes" aria-label="Kiçik ölçülərdə görünüş">
+      <img src="azsl-communication-bridge-v4.png" alt="64 piksel loqo" width="64" height="64">
+      <img src="azsl-communication-bridge-v4.png" alt="32 piksel loqo" width="32" height="32">
+      <img src="azsl-communication-bridge-v4.png" alt="24 piksel loqo" width="24" height="24">
+    </div>
+    <nav aria-label="Loqo faylları">
+      <a href="azsl-communication-bridge-v4.png" download>Şəffaf PNG-ni yüklə</a>
+      <a href="logo-research-v4.md">Araşdırma və konsept</a>
+      <a href="imagegen-prompts-v4.txt">Generasiya promptları</a>
+    </nav>
+  </main>
+</body>
+</html>
+

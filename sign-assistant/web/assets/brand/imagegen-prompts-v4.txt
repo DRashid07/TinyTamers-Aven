@@ -1,0 +1,31 @@
+# Owner: Codex (Brand/logo assets).
+# Generator: built-in image_gen.imagegen; transparent_background=true.
+# First generation: new logo from scratch, no reference images.
+# Refinement: the first new generation was the sole edit target.
+
+=== INITIAL GENERATION ===
+Use case: logo-brand
+Asset type: one finished premium text-free brand symbol for an Azerbaijani sign-language assistive technology product, transparent PNG.
+Primary request: DESIGN A COMPLETELY NEW LOGO FROM SCRATCH. The product connects signed visual communication with text and speech in both directions. Design a symbol for equal participation and mutual understanding, expressed as two complementary communication paths forming a shared passage. The visual environment should suit Azercell's contemporary violet branding, while this mark has its own independent geometry.
+Concept: "communication bridge". TWO OPEN SCULPTED RIBBON ELBOWS, not closed loops. One substantial ribbon rises along the left, turns in a beautiful broad rounded upper-left elbow, and extends briefly toward the center at the top. Its equal counterpart is rotated 180 degrees: it descends along the right, turns at the lower-right, and extends toward the center at the bottom. The two forms face and answer each other around one clean generous central passage. This is an abstract emblem, not readable lettering.
+Exact geometry guidance, within a normalized 100 by 100 design area: upper-left shape runs from x16,y80 upward to x16,y44, rounds outward to x44,y16, then ends at x54,y16; its inner return runs x54,y36 to x44,y36, rounds to x36,y44, and returns to x36,y80. The lower-right shape is its 180-degree counterpart: x84,y20 down to x84,y56, round to x56,y84, end at x46,y84; inner return x46,y64 to x56,y64, round to x64,y56 and up to x64,y20. Main body width about 20; large outer curves, smaller precise inner curves; a broad central channel about 28 wide; small open end gaps about 10. Keep both forms open and separated, with subtle optical adjustments and a controlled diagonal tension. The actual artwork should be professionally drawn, never a technical diagram.
+Premium art direction: architectural simplicity, poised sculptural silhouette, immaculate curve-to-straight transitions, precise weight, purposeful negative space, quiet confidence. This should feel like a bespoke identity commissioned for a serious accessible technology product. Graceful and human rather than mechanical or playful.
+Color: a single rich royal violet close to #60269E. Solid filled two-dimensional shapes, a crisp vector-like finish. Fully opaque interiors; transparent negative space and background.
+Composition: one centered compact emblem on a square genuinely transparent canvas. Symbol occupies roughly 65 percent of canvas height, with generous optical padding. No text anywhere.
+Constraints: no words, lettering, initials, monograms, numerals or labels. No literal hand, fingers, palm, speech bubble, heart, infinity, chain link, generic AI sparkle, sound bars, eye, shield or crown. Do not reproduce Azercell's emblem. No 3D render, gold, metallic material, gloss, glass, shadows, bevel, mockup, app tile, badge, decorative background, watermark, or drawn checkerboard. Only this single finished original symbol.
+
+=== FINAL GEOMETRIC REFINEMENT ===
+Use case: logo-brand
+Asset type: final premium geometric logomark master, transparent PNG.
+Input image: Image 1 is the edit target: the newly designed AzSL communication-bridge emblem. Preserve this TWO-OPEN-ELBOW motif, arrangement and proportions.
+Primary request: Apply one focused GEOMETRIC PRECISION refinement. Make this emblem appear impeccably engineered and professionally finished.
+Changes:
+- Remove both unintended dents/bulges halfway down the inner vertical walls. On the upper-left piece, the inner edge must be an exact straight vertical segment from the lower endpoint up to the start of one smooth quarter-circle bend into the top horizontal arm. On the lower-right piece, the inner edge must be its congruent 180-degree counterpart. NO inflection, wobble or extra inward bump.
+- Make the two pieces exactly congruent under 180-degree rotation. Equalize their OPTICAL ribbon width from vertical stem through the curved elbow into the horizontal terminal. Use a beautiful single consistent main width, about 20 units on a 100-unit grid.
+- Use identical restrained small corner radii at all terminals, roughly 2 units, not pill-shaped ends. Main outer elbow radius about 28 units and inner elbow about 8 units. This follows from the constant 20-unit width.
+- Leave a broad clean rectangular central channel and equal narrow openings at its opposite ends. Keep an open outline, never close it into a frame or chain.
+- Fill every interior pixel with a uniform flat deep royal violet close to #60269E. Remove gradients, texture, grain, highlights and any surface lighting. Only smooth antialiased boundary pixels may vary in alpha.
+Style: flat two-dimensional vector-like precision. Premium finish from congruent shapes, optical balance, exact curve tangencies and intentional negative space. It represents accessible communication in two directions; retain this poised architectural character.
+Composition: same centered mark on a square transparent canvas with generous safe margins.
+Invariants: no text, letters, monogram, numerals, labels, hand, speech bubble, infinity loop, chain icon, decorative elements, frame, badge, shadow, 3D, metallic material, mockup, app tile, watermark or opaque background. Do not add any shapes or symbols. Output ONLY this one perfected two-piece logo with genuine transparency.
+

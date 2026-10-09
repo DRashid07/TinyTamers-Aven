@@ -90,3 +90,16 @@ Per-class accuracy (no abstention):
 
 **What this means.** Without abstaining, the model names the right sign for 66% of these clips; counting every sign equally (macro) it is 82%. The worst mix-up is MƏNİM / MƏNƏ. Top-1 is lower than macro because most errors come from one big class: MƏN is wrong in 276 of 513 clips, mostly taken for MƏNİM. With the abstain rule (tau 0.9, margin 0.2) it answers 37% of the clips and says "Əmin deyiləm" for the rest; when it answers it is right 96% of the time. Caution: val groups are recording dates of the same AzSLD signers that are in train, so these numbers are optimistic for a new signer; only the test and team sections measure that.
 <!-- END val -->
+
+<!-- BEGIN team -->
+## Team recordings (non-native signers, webcam)
+
+**Status: not run yet.** No team recordings exist (0 clips), so there are no team numbers. Protocol:
+data/team_recordings/README.md. When 3-4 team members have recorded every vocabulary word 3-5 times, run
+`python -m eval.evaluate --split team`; it replaces this section with the results.
+
+**Signer independence.** AzSLD has no signer IDs. The dataset split groups clips by recording date, so the same
+AzSLD signers are in train and val: the val numbers above are **not signer-independent**. The team recordings are
+the only signer-independent test. The recorders are **not native signers** of AzSL: each learns a sign from the
+dataset clip just before recording it, so their results do not stand for deaf AzSL users.
+<!-- END team -->

@@ -24,6 +24,7 @@ from pose.segment import Segmenter, load_config, segment_offline, status
 ROOT = Path(__file__).resolve().parent.parent
 VOCAB_PATH = ROOT / "data" / "vocab.json"
 PREDICTOR = Predictor(ROOT / os.environ.get("MODEL_DIR", "model/artifacts"))
+LATENCY_BUDGET_MS = 50  # features + inference per segment on CPU; slower segments are logged as warnings
 
 log = logging.getLogger("uvicorn.error")
 router = APIRouter()
@@ -58,11 +59,13 @@ def recognise(frames, w, h, segment_status="ok"):
         except Exception:  # noqa: BLE001 - a model error must abstain, never guess
             log.exception("recognise failed")
             result = abstain("model_not_loaded")
+    latency = (time.perf_counter() - start) * 1000  # features + inference + decide
     duration = frames[-1]["t"] - frames[0]["t"] if frames else 0.0
     outcome = (f"ok {result['id']} {result['confidence']}" if result["status"] == "ok"
                else f"abstain {result['reason']}")
-    log.info("segment: %d frames, %.0f ms, latency %.1f ms -> %s", len(frames), duration,
-             (time.perf_counter() - start) * 1000, outcome)
+    log.log(logging.WARNING if latency > LATENCY_BUDGET_MS else logging.INFO,
+            "segment: %d frames, %.0f ms, latency %.1f ms (budget %d ms) -> %s", len(frames), duration,
+            latency, LATENCY_BUDGET_MS, outcome)
     return result
 
 

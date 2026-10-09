@@ -1,14 +1,55 @@
 <!doctype html>
-<!-- Owner: D (Direction B/Speech/Eval). Placeholder page. -->
+<!-- Owner: D (Direction B/Speech/Eval). Text or speech -> POST /text-to-signs -> sign clips back to back. -->
 <html lang="az">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Text to Signs</title>
+  <title>Mətndən işarəyə</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 0.4rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; margin: 0.5rem 0; }
+    .player { background: #000; aspect-ratio: 4 / 3; }
+    .player video { width: 100%; height: 100%; display: block; }
+    .subtitle { min-height: 1.5em; margin: 0.4rem 0; font-size: 1.5rem; font-weight: 600; text-align: center; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; list-style: none; }
+    .chip { padding: 0.2rem 0.6rem; border: 1px solid #999; border-radius: 1rem; background: #fff; }
+    .chip.current { background: #1f7a33; border-color: #1f7a33; color: #fff; }
+    .chip.oov { background: #fde8e7; border-color: #b3261e; color: #b3261e; }
+    .chip.missing { border-style: dashed; color: #777; }
+  </style>
 </head>
 <body>
-  <h1>Text to signs</h1>
-  <p>Assistive prototype, not a validated translator. Under construction.</p>
-  <script src="signs.js"></script>
+  <div class="banner" role="note">Köməkçi prototip. Təsdiqlənmiş tərcümə deyil.</div>
+  <main>
+    <h1>Mətndən işarəyə</h1>
+    <label for="text">Mətn (ən çox 300 simvol)</label>
+    <textarea id="text" rows="3" maxlength="300" placeholder="məs. Sabah Bakıya getmək istəyirəm"></textarea>
+    <div class="controls">
+      <button id="mic" type="button" hidden>🎤 Danış</button>
+      <button id="show" type="button">Göstər</button>
+      <button id="replay" type="button" disabled>Təkrar</button>
+      <label>Sürət
+        <select id="speed">
+          <option value="0.75">0.75x</option>
+          <option value="1" selected>1x</option>
+        </select>
+      </label>
+      <span id="status" class="status" aria-live="polite"></span>
+    </div>
+
+    <div class="player"><video id="video" muted playsinline preload="auto"></video></div>
+    <p id="subtitle" class="subtitle" aria-live="polite"></p>
+    <ol id="chips" class="chips" aria-label="İşarələrin ardıcıllığı"></ol>
+
+    <p id="source" class="note"></p>
+    <p class="note">İşarələr mətndəki söz sırası ilə göstərilir; AzSL qrammatikası tətbiq olunmur.
+      Qırmızı: lüğətdə işarəsi olmayan söz.</p>
+    <p id="mic-note" class="note" hidden>Mikrofon: Chrome nitqi tanımaq üçün səsi Google serverinə göndərir.</p>
+    <p class="note">Videolar: AzSLD (Alishzade &amp; Hasanov, 2025), CC BY 4.0,
+      <a href="https://doi.org/10.5281/zenodo.14222948">DOI 10.5281/zenodo.14222948</a>.
+      Kliplər komanda tərəfindən kəsilib və yenidən kodlanıb.</p>
+  </main>
+  <script type="module" src="signs.js"></script>
 </body>
 </html>

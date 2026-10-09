@@ -1,4 +1,5 @@
-// Owner: B (Frontend). Webcam -> MediaPipe landmarks -> /ws/recognise, plus record mode.
+// Owner: B (Frontend). Direction A: webcam -> MediaPipe landmarks -> /ws/recognise -> word buffer
+// -> /compose-sentence (only on "Cümlə qur") -> /tts, plus record mode.
 // Webcam frames never leave the browser; only landmark coordinates are sent.
 import {
   DrawingUtils, FilesetResolver, HandLandmarker, PoseLandmarker,
@@ -9,6 +10,9 @@ const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm"
 const MAX_SEND_FPS = 30;
 const UPPER_BODY = 25; // pose points 0-24: face, shoulders, arms, hands, hips
 const POSE_UPPER = PoseLandmarker.POSE_CONNECTIONS.filter((c) => c.start < UPPER_BODY && c.end < UPPER_BODY);
+const MAX_WORDS = 12; // POST /compose-sentence accepts 1-12 ids
+const HOLD_MS = 2500; // how long a result stays in the status pill
+const ABSTAIN_TEXT = "Əmin deyiləm, zəhmət olmasa təkrar edin.";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video");
@@ -22,6 +26,9 @@ let lastSent = -Infinity;
 let fpsFrames = 0, fpsMs = 0, fpsStart = performance.now();
 let recording = null; // {id, signer, w, h, frames} while "Yaz" is on
 const recCounts = {};
+const words = []; // the word buffer: {id, gloss} of "ok" results only, never of an abstain
+let pillTimer = null;
+let ttsAvailable = true; // false after /tts answers 503 (not configured)
 
 function setText(id, text, cls) {
   $(id).textContent = text;
@@ -117,6 +124,7 @@ function connect() {
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "start", w: video.videoWidth, h: video.videoHeight }));
     setText("server", "Serverə qoşulub", "ok");
+    setPill("idle", "Gözləyirəm");
   };
   ws.onmessage = (event) => {
     try {
@@ -127,18 +135,120 @@ function connect() {
   };
   ws.onclose = () => {
     setText("server", "Server bağlantısı yoxdur", "bad");
+    setPill("offline", "Server bağlantısı yoxdur");
     setTimeout(connect, 2000);
   };
 }
 
+// Status pill: "Gözləyirəm" -> "İşarə edilir..." -> result, which goes back to idle after holdMs.
+function setPill(state, text, detail = "", holdMs = 0) {
+  clearTimeout(pillTimer);
+  const pill = $("pill");
+  pill.className = `pill ${state}`;
+  pill.textContent = text;
+  if (detail) {
+    const small = document.createElement("small");
+    small.textContent = detail;
+    pill.append(small);
+  }
+  if (holdMs) pillTimer = setTimeout(() => setPill("idle", "Gözləyirəm"), holdMs);
+}
+
 function showMessage(msg) {
-  if (msg.type === "state" && msg.signing) setText("result", "İşarə göstərilir…");
-  if (msg.type === "result") {
-    setText("result", msg.status === "ok"
-      ? `Təxmin: ${msg.gloss} (${Math.round(msg.confidence * 100)}%)`
-      : msg.message);
+  if (msg.type === "state") {
+    if (msg.signing) setPill("signing", "İşarə edilir...");
+    return;
+  }
+  if (msg.type !== "result") return;
+  if (msg.status === "ok" && msg.id && msg.gloss) {
+    addWord(msg.id, msg.gloss);
+    setPill("ok", msg.gloss, `əminlik ${Math.round(msg.confidence * 100)}%`, HOLD_MS);
+  } else {
+    setPill("abstain", ABSTAIN_TEXT, "", HOLD_MS); // an abstain never adds a word
   }
 }
+
+function addWord(id, gloss) {
+  if (words.length >= MAX_WORDS) {
+    setText("buffer-note", `Ən çox ${MAX_WORDS} söz: əvvəl cümlə qurun, sonra Təmizlə.`, "note bad");
+    return;
+  }
+  words.push({ id, gloss });
+  renderWords();
+}
+
+function renderWords() {
+  $("buffer").replaceChildren(...words.map((w) => {
+    const li = document.createElement("li");
+    li.textContent = w.gloss;
+    return li;
+  }));
+  $("undo").disabled = $("clear").disabled = $("compose").disabled = !words.length;
+  setText("buffer-note", words.length ? "" : "Tanınan sözlər burada görünəcək.", "note");
+  $("sentence-panel").hidden = true; // a composed sentence belongs to the old buffer
+}
+
+function showSentence(result) {
+  $("sentence").textContent = result.sentence;
+  $("glosses").textContent = `Tanınan işarələr: ${result.glosses.join(" · ")}`;
+  $("assumptions").replaceChildren(...result.assumptions.map((a) => {
+    const li = document.createElement("li");
+    li.textContent = a;
+    return li;
+  }));
+  $("fallback-note").hidden = result.source === "llm" && result.ok;
+  $("speak").hidden = !ttsAvailable;
+  setText("speak-status", "", "note");
+  $("sentence-panel").hidden = false;
+}
+
+async function postJson(url, body) {
+  return fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+}
+
+$("undo").onclick = () => { words.pop(); renderWords(); };
+$("clear").onclick = () => { words.length = 0; renderWords(); };
+
+$("compose").onclick = async () => {
+  const ids = words.map((w) => w.id);
+  if (!ids.length) return;
+  $("compose").disabled = true;
+  setText("buffer-note", "Cümlə qurulur…", "note");
+  try {
+    const res = await postJson("/compose-sentence", { ids });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    if (ids.join() !== words.map((w) => w.id).join()) return setText("buffer-note", "Sözlər dəyişdi: yenidən Cümlə qur.", "note");
+    showSentence(result);
+    setText("buffer-note", "", "note");
+  } catch (err) {
+    setText("buffer-note", `Cümlə qurulmadı (${err.message})`, "note bad");
+  } finally {
+    $("compose").disabled = !words.length;
+  }
+};
+
+$("speak").onclick = async () => { // audio only ever starts from this click
+  $("speak").disabled = true;
+  setText("speak-status", "", "note");
+  try {
+    const res = await postJson("/tts", { text: $("sentence").textContent });
+    if (res.status === 503) {
+      ttsAvailable = false;
+      $("speak").hidden = true;
+      return setText("speak-status", "Səsləndirmə qoşulmayıb.", "note");
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const url = URL.createObjectURL(await res.blob());
+    const audio = new Audio(url);
+    audio.onended = () => URL.revokeObjectURL(url);
+    await audio.play();
+  } catch (err) {
+    setText("speak-status", `Səsləndirmə alınmadı (${err.message})`, "note bad");
+  } finally {
+    $("speak").disabled = false;
+  }
+};
 
 async function loadVocab() {
   try {
@@ -208,7 +318,9 @@ async function main() {
     setText("status", `Hazır (poza: ${p.delegate}, əllər: ${h.delegate})`, "ok");
   } catch (err) {
     console.error(err);
-    setText("status", err.name === "NotAllowedError" ? "Kameraya icazə verilmədi" : `Xəta: ${err.message}`, "bad");
+    const text = err.name === "NotAllowedError" ? "Kameraya icazə verilmədi" : `Xəta: ${err.message}`;
+    setText("status", text, "bad");
+    setPill("offline", text);
     return;
   }
   connect();
